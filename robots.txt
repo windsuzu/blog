@@ -1,1 +1,1 @@
-Sitemap: https://windsuzu.github.io/blog/sitemap.xml
+Sitemap: https://jaywang.xyz/sitemap.xml
