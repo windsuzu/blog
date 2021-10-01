@@ -40,6 +40,22 @@
   
 
   
+      ,"page3": {
+          "title": "Portfolio",
+          "content": "Machine Learning | Deep Learning | Front-End | Others | . Machine Learning . Deep Learning . Front-End . Others .",
+          "url": "https://jaywang.xyz/portfolio/",
+          "relUrl": "/portfolio/",
+          "date": ""
+      }
+      
+  
+
+  
+  
+
+  
+
+  
   
 
   
@@ -48,18 +64,13 @@
   
 
   
-
-  
   
 
   
   
 
   
-  
-
-  
-      ,"page10": {
+      ,"page11": {
           "title": "",
           "content": "Sitemap: {{ “sitemap.xml” | absolute_url }} | .",
           "url": "https://jaywang.xyz/robots.txt",
