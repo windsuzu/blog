@@ -42,9 +42,20 @@
   
       ,"page3": {
           "title": "Portfolio",
-          "content": "Machine Learning | Deep Learning | Front-End | Others | . Machine Learning . Deep Learning . Front-End . Others .",
+          "content": "Machine Learning . Deep Learning . Front-End . Others .",
           "url": "https://jaywang.xyz/portfolio/",
           "relUrl": "/portfolio/",
+          "date": ""
+      }
+      
+  
+
+  
+      ,"page4": {
+          "title": "Résumé",
+          "content": ".",
+          "url": "https://jaywang.xyz/resume/",
+          "relUrl": "/resume/",
           "date": ""
       }
       
@@ -70,7 +81,7 @@
   
 
   
-      ,"page11": {
+      ,"page12": {
           "title": "",
           "content": "Sitemap: {{ “sitemap.xml” | absolute_url }} | .",
           "url": "https://jaywang.xyz/robots.txt",
