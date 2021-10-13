@@ -3,53 +3,11 @@ layout: page
 title: About Me
 permalink: /about/
 ---
-<style>
-    #bg {
-        display: flex;
-        justify-content: center;
-    }
 
-    #profile {
-        flex: 3;
-        /* background-color: aqua; */
-        display: flex;
-        justify-content: start;
-        align-items: center;
-        flex-direction: column;
-    }
+<link rel="stylesheet" href="../assets/styles.css">
 
-    #intro {
-        flex: 7;
-        display: block;
-        justify-content: start;
-        align-items: start;
-        /* background-color: red; */
-        margin: 6px 4px 32px 4px;
-    }
+<div class="divider"><span class="section">Past and present</span></div>
 
-    #avatar-b {
-        border: 3px solid #850426;
-        margin: 12px;
-    }
-
-    #avatar {
-        border: 3px solid white;
-        object-fit: cover;
-    }
-
-    #sign {
-        object-fit: contain;
-        margin: 6px;
-    }
-</style>
-
-<div
-    style="width: 100%; height: 15px; border-bottom: 3px solid rgba(128, 128, 128, 0.514); text-align: center; margin: auto; margin-top: 12px;">
-    <span
-        style="font-size: 24px; font-weight: bold; color: rgb(37, 37, 37); border: #850426 solid 3px; background-color: white; padding: 7px 24px 7px 24px;">
-        Past and present
-    </span>
-</div>
 <br>
 <div id="bg">
     <div id="profile">
@@ -77,13 +35,9 @@ permalink: /about/
         </span>
     </div>
 </div>
-<div
-    style="width: 100%; height: 15px; border-bottom: 3px solid rgba(128, 128, 128, 0.514); text-align: center; margin: auto; margin-top: 12px;">
-    <span
-        style="font-size: 24px; font-weight: bold; color: rgb(37, 37, 37); border: #850426 solid 3px; background-color: white; padding: 7px 24px 7px 24px;">
-        Future
-    </span>
-</div>
+
+<div class="divider"><span class="section">Future</span></div>
+
 <br>
 <div>
     <img src="../images/ohtani.png" alt="Ohtani" style="display:block; margin: auto;">

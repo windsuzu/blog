@@ -1,0 +1,107 @@
+#bg {
+    display: flex;
+    justify-content: center;
+}
+
+#profile {
+    flex: 3;
+    /* background-color: aqua; */
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+}
+
+#intro {
+    flex: 7;
+    display: block;
+    justify-content: start;
+    align-items: start;
+    /* background-color: red; */
+    margin: 6px 4px 32px 4px;
+}
+
+#avatar-b {
+    border: 3px solid #850426;
+    margin: 12px;
+}
+
+#avatar {
+    border: 3px solid white;
+    object-fit: cover;
+}
+
+#sign {
+    object-fit: contain;
+    margin: 6px;
+}
+
+.divider {
+    width: 100%; 
+    height: 15px; 
+    border-bottom: 3px solid rgba(128, 128, 128, 0.514); 
+    text-align: center; 
+    margin: auto; 
+    margin-top: 32px;
+    margin-bottom: 48px;
+    /* display: none; */
+}
+
+.divider--hidden {
+    display: none;
+}
+
+.section {
+    font-size: 24px; 
+    font-weight: bold; 
+    color: rgb(37, 37, 37); 
+    border: #850426 solid 3px; 
+    background-color: white; 
+    padding: 7px 24px 7px 24px;
+}
+
+.blockquote {
+    margin: 10px 30px;
+    padding: 30px;
+    background: #ffffff;
+    color: #850426;
+    border: 0px solid #B90020;
+    box-sizing: border-box;
+}
+
+.blockquote--bordered {
+    border-left-width: 10px;
+}
+
+.blockquote--quoted::before {
+    font-family: 'Times New Roman', Times, serif;
+    content: "\201c";
+    font-size: 100px;
+    color: #B90020;
+    display: block;
+    margin-top: -50px;
+    margin-bottom: -70px;
+}
+
+.blockquote__text {
+    font-family: "Klee One", cursive;
+    font-style: italic;
+    font-size: 36px;
+    line-height: 1.2;
+    margin: 0;
+}
+
+.blockquote__text--credit {
+    font-weight: bold;
+    font-style: normal;
+    text-align: right;
+    font-size: 42px;
+}
+
+.blockquote__text:last-child {
+    color: #B90020;
+}
+
+.blockquote__text--credit::before {
+    content: "\2014\0020";
+}
