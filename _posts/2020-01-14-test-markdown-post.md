@@ -2,10 +2,10 @@
 toc: true
 layout: post
 description: A minimal example of using markdown with fastpages.
-categories: [markdown]
+# categories: [markdown]
 title: An Example Markdown Post
-# search_exclude: false
-# hide: true
+search_exclude: true
+hide: true
 ---
 # Example Markdown Post
 
@@ -99,7 +99,6 @@ key: value
 
 ## Footnotes
 
+Hello World {% fn 1 %}.
 
-
-[^1]: This is the footnote.
-
+{{ 'This is the footnote.' | fndetail: 1 }}
