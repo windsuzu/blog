@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>學習 Android RxJava | Jay Wang</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="學習 Android RxJava" />
+<meta name="author" content="Jay Wang" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="學習 Android RxJava" />
+<meta property="og:description" content="學習 Android RxJava" />
+<link rel="canonical" href="https://jaywang.xyz/android/rxjava/2017/05/05/learn-android-rxjava.html" />
+<meta property="og:url" content="https://jaywang.xyz/android/rxjava/2017/05/05/learn-android-rxjava.html" />
+<meta property="og:site_name" content="Jay Wang" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-05-05T11:14:07-05:00" />
+<script type="application/ld+json">
+{"datePublished":"2017-05-05T11:14:07-05:00","url":"https://jaywang.xyz/android/rxjava/2017/05/05/learn-android-rxjava.html","@type":"BlogPosting","headline":"學習 Android RxJava","dateModified":"2017-05-05T11:14:07-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://jaywang.xyz/android/rxjava/2017/05/05/learn-android-rxjava.html"},"author":{"@type":"Person","name":"Jay Wang"},"description":"學習 Android RxJava","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://jaywang.xyz/feed.xml" title="Jay Wang" /><!-- the google_analytics_id gets auto inserted from the config file -->
+
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0LDQ23SQFE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-0LDQ23SQFE');
+</script>
+
+
+<link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js" integrity="sha512-Do7uJAaHZm5OLrIv/yN4w0iG1dbu01kzdMNnFfu/mAqgUk6Nniv2JYHcwH+cNwjqgLcqcuBBk+JRvprLVI8azg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha512-0doc9hKxR3PYwso42RD1p5ySZpzzuDiOwMrdCEh2WdJZCjcmFKc/wEnL+z8fBQrnHoiNWbo+3fiGkOYXBdQp4A==" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Jay Wang</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About Me</a><a class="page-link" href="/portfolio/">Portfolio</a><a class="page-link" href="/resume/">Résumé</a><a class="page-link" href="/search/">Search</a><a class="page-link" href="/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">學習 Android RxJava</h1><p class="page-description">學習 Android RxJava</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2017-05-05T11:14:07-05:00" itemprop="datePublished">
+        May 5, 2017
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      6 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/categories/#Android">Android</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#RxJava">RxJava</a>
+        
+      
+      </p>
+    
+
+    </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h1"><a href="#為什麼要學習-rxjava">為什麼要學習 RxJava</a></li>
+<li class="toc-entry toc-h1"><a href="#原理">原理</a></li>
+<li class="toc-entry toc-h1"><a href="#hello-world-">Hello, World !</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#設置-gradle">設置 Gradle</a></li>
+<li class="toc-entry toc-h2"><a href="#觀察者-observer">觀察者 Observer</a></li>
+<li class="toc-entry toc-h2"><a href="#被觀察者-observable">被觀察者 Observable</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#簡潔化">簡潔化</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#just">just</a></li>
+<li class="toc-entry toc-h2"><a href="#from">from</a></li>
+<li class="toc-entry toc-h2"><a href="#action">Action</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#變換函數">變換函數</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#map">map</a></li>
+<li class="toc-entry toc-h2"><a href="#flatmap">flatmap</a></li>
+<li class="toc-entry toc-h2"><a href="#其他轉換函數">其他轉換函數</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#scheduler">Scheduler</a></li>
+<li class="toc-entry toc-h1"><a href="#加入-lambda-function">加入 Lambda Function</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#setup">Setup</a></li>
+<li class="toc-entry toc-h2"><a href="#lambda-語法">Lambda 語法</a></li>
+<li class="toc-entry toc-h2"><a href="#lambda-方法引用-method-reference">lambda 方法引用 (method reference)</a></li>
+<li class="toc-entry toc-h2"><a href="#實際在-rxjava-操作">實際在 RxJava 操作</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#結語">結語</a></li>
+<li class="toc-entry toc-h1"><a href="#reference">Reference</a></li>
+</ul><h1 id="為什麼要學習-rxjava">
+<a class="anchor" href="#%E7%82%BA%E4%BB%80%E9%BA%BC%E8%A6%81%E5%AD%B8%E7%BF%92-rxjava" aria-hidden="true"><span class="octicon octicon-link"></span></a>為什麼要學習 RxJava</h1>
+
+<p>終於寫到了 RxJava ，前陣子在 <a href="https://juejin.im">掘金</a> 不斷看到這個名字，一直想把他學起來應用在開發上。 看了好多文章，也實際操作，延伸學習了不少新的東西。像是更了解 Android 的執行緒、觀察者模式、 Java 8 的 lambda 語法。雖然我這個新手還沒有做過很大的 Project ，但相信 RxJava 會成為未來一個很棒的工具。</p>
+
+<p>記得什麼基礎都沒有時，為了要把網站的圖下載下來顯示到 imageView 中，使用了同步請求，把主執行緒塞爆 UI 當的要死。接著學習了 okhttp、Volley 這些 HTTP 請求的框架，知道了怎麼樣異步處理網路的請求。 但越寫越多，發現自己的程式碼亂七八糟。</p>
+
+<p>RxJava 就是要讓 “異步操作” 更乾淨、簡潔的實作出來，而且比起 Android 內建的 AsyncTask 或 Handler 更能夠應付越寫越複雜的程式碼。搭配上 lambda 語法，看起來也變得很漂亮。</p>
+
+<h1 id="原理">
+<a class="anchor" href="#%E5%8E%9F%E7%90%86" aria-hidden="true"><span class="octicon octicon-link"></span></a>原理</h1>
+<p>RxJava 的概念即是觀察者模式 (Observer Pattern) ，由觀察者 (Observer) 與被觀察者 (Subject) 組成。</p>
+
+<p><img src="/images/markdown/learn-android-rxjava/flow1.jpg" width="200"></p>
+
+<p><strong>觀察者</strong> 透過訂閱 (Subscribe) 或稱註冊 (Register) 的方式，監控著 <strong>被觀察者</strong> 。只要 <strong>被觀察者</strong> 一發生什麼變動，就馬上通知 <strong>觀察者</strong></p>
+
+<p>就像 Button 註冊 OnClickListener 一樣 :</p>
+
+<p><img src="/images/markdown/learn-android-rxjava/flow2.jpg" width="200"></p>
+
+<p>RxJava 中的觀察者為 Observer ， 被觀察者為 Observable ， 訂閱的方法為 subscribe()，流程也是類似方式
+<img src="/images/markdown/learn-android-rxjava/flow3.jpg" width="200"></p>
+
+<p>這邊要注意的是，這些方法在 java 中寫起來是長這樣的 :</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">myButton</span><span class="o">.</span><span class="na">setOnClickListener</span><span class="o">(</span><span class="n">myOnClickListener</span><span class="o">);</span>
+<span class="n">observable</span><span class="o">.</span><span class="na">subscribe</span><span class="o">(</span><span class="n">observer</span><span class="o">);</span>
+</code></pre></div></div>
+<p>咦? 這樣看起來不就是 observable 去訂閱 observer 嗎 ? 我也很納悶，在一篇文章這樣解釋著。</p>
+
+<blockquote>
+
+  <p>有人可能會注意到， subscribe() 這個方法有點怪：它看起來是『observable 訂閱了 observer / subscriber』而不是『observer / subscriber 訂閱了 observalbe』，這看起來就像『雜志訂閱了讀者』一樣顛倒了對像關系。這讓人讀起來有點別扭，不過如果把 API 設計成 observer.subscribe(observable) / subscriber.subscribe(observable) ，雖然更加符合思維邏輯，但對流式 API 的設計就造成影響了，比較起來明顯是得不償失的。</p>
+
+  <p><a href="https://gank.io/post/560e15be2dca930e00da1083">扔物线 - 給 Android 開發者的 RxJava 詳解</a></p>
+</blockquote>
+
+<hr>
+
+<h1 id="hello-world-">
+<a class="anchor" href="#hello-world-" aria-hidden="true"><span class="octicon octicon-link"></span></a>Hello, World !</h1>
+<p>先從最基本的回傳字串實際操作看看 !</p>
+
+<h2 id="設置-gradle">
+<a class="anchor" href="#%E8%A8%AD%E7%BD%AE-gradle" aria-hidden="true"><span class="octicon octicon-link"></span></a>設置 Gradle</h2>
+<div class="language-gradle highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">compile</span> <span class="s1">'io.reactivex:rxjava:1.0.14'</span>
+    <span class="n">compile</span> <span class="s1">'io.reactivex:rxandroid:1.0.1'</span>
+</code></pre></div></div>
+
+<h2 id="觀察者-observer">
+<a class="anchor" href="#%E8%A7%80%E5%AF%9F%E8%80%85-observer" aria-hidden="true"><span class="octicon octicon-link"></span></a>觀察者 Observer</h2>
+<p>先從創建一個觀察者 Observer 看看 :</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Observer</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">observer</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Observer</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;()</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onNext</span><span class="o">(</span><span class="nc">String</span> <span class="n">s</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="no">TAG</span><span class="o">,</span> <span class="s">"Item: "</span> <span class="o">+</span> <span class="n">s</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onCompleted</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="no">TAG</span><span class="o">,</span> <span class="s">"Completed!"</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onError</span><span class="o">(</span><span class="nc">Throwable</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="no">TAG</span><span class="o">,</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+    <span class="o">}</span>
+<span class="o">};</span>
+</code></pre></div></div>
+<p>RxJava 的 Observable 發生改變時，會回傳給 Observer 三種方法，分別是 <code class="language-plaintext highlighter-rouge">OnNext()</code> 、 <code class="language-plaintext highlighter-rouge">OnComplete()</code> 、 <code class="language-plaintext highlighter-rouge">onError()</code> :</p>
+
+<ul>
+  <li>OnNext() : Observable 發送過來的訊息，會批次的在這個方法中實現，就像 OnClick() 一樣。</li>
+  <li>OnComplete() : 當全部 OnNext() 都被執行完畢，會觸發這個方法。</li>
+  <li>onError() : 如果在執行的途中發生錯誤，會馬上執行這個方法，並且中止。</li>
+</ul>
+
+<h2 id="被觀察者-observable">
+<a class="anchor" href="#%E8%A2%AB%E8%A7%80%E5%AF%9F%E8%80%85-observable" aria-hidden="true"><span class="octicon octicon-link"></span></a>被觀察者 Observable</h2>
+<p>接著創建被觀察者 Observable</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Observable</span> <span class="n">observable</span> <span class="o">=</span> <span class="nc">Observable</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="k">new</span> <span class="nc">Observable</span><span class="o">.</span><span class="na">OnSubscribe</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;()</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">call</span><span class="o">(</span><span class="nc">Subscriber</span><span class="o">&lt;?</span> <span class="kd">super</span> <span class="nc">String</span><span class="o">&gt;</span> <span class="n">subscriber</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">subscriber</span><span class="o">.</span><span class="na">onNext</span><span class="o">(</span><span class="s">"Hello!"</span><span class="o">);</span>
+        <span class="n">subscriber</span><span class="o">.</span><span class="na">onNext</span><span class="o">(</span><span class="s">"World!"</span><span class="o">);</span>
+        <span class="n">subscriber</span><span class="o">.</span><span class="na">onCompleted</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">});</span>
+</code></pre></div></div>
+<p>RxJava 使用 create() 創建一個 Observable，並且丟入參數 OnSubscribe 儲存回 Observable 中，當 Observable 被訂閱後，OnSubscribe 的 call() 方法就會被呼叫。</p>
+
+<p>那如何訂閱呢 ? 前面有說過 :</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">observable</span><span class="o">.</span><span class="na">subscribe</span><span class="o">(</span><span class="n">observer</span><span class="o">);</span>
+<span class="c1">// LogCat 就會依序印出 "Hello!", "World!", "Completed!" 囉</span>
+</code></pre></div></div>
+
+<hr>
+
+<h1 id="簡潔化">
+<a class="anchor" href="#%E7%B0%A1%E6%BD%94%E5%8C%96" aria-hidden="true"><span class="octicon octicon-link"></span></a>簡潔化</h1>
+<p>看完了最基礎的用法後，如果每次都要創建 Observer 跟 Observable ，再來 subscribe() 連結關係，好麻煩 !
+所以 RxJava 還有好多必學的用法。</p>
+
+<h2 id="just">
+<a class="anchor" href="#just" aria-hidden="true"><span class="octicon octicon-link"></span></a>just</h2>
+<p>使用 Observable.just() 來創建 <strong>被觀察者</strong> ，與 Observable.create() 所產生的結果是一模一樣的。</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Observable</span> <span class="n">observable</span> <span class="o">=</span> <span class="nc">Observable</span><span class="o">.</span><span class="na">just</span><span class="o">(</span><span class="s">"Hello!"</span><span class="o">,</span> <span class="s">"World!"</span><span class="o">);</span>
+<span class="c1">// 一樣會依序印出 "Hello!", "World!", "Completed!"</span>
+</code></pre></div></div>
+
+<h2 id="from">
+<a class="anchor" href="#from" aria-hidden="true"><span class="octicon octicon-link"></span></a>from</h2>
+<p>Observable.from() 則是能夠讀取繼承 <code class="language-plaintext highlighter-rouge">Iterable</code> 的所有類別如 <code class="language-plaintext highlighter-rouge">List</code>，並且拆開依序發送出來。</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">String</span><span class="o">[]</span> <span class="n">list</span> <span class="o">=</span> <span class="o">{</span><span class="s">"Hello!"</span><span class="o">,</span> <span class="s">"World!"</span><span class="o">};</span>
+<span class="nc">Observable</span> <span class="n">observable</span> <span class="o">=</span> <span class="nc">Observable</span><span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="n">list</span><span class="o">);</span>
+<span class="c1">// 一樣會依序印出 "Hello!", "World!", "Completed!"</span>
+</code></pre></div></div>
+
+<h2 id="action">
+<a class="anchor" href="#action" aria-hidden="true"><span class="octicon octicon-link"></span></a>Action</h2>
+<p>簡化了 Observable 的方法後，再來是 Observer 這邊了。 subscribe(Observer) 需要回傳三種方法，在示範中，除了 <code class="language-plaintext highlighter-rouge">onNext()</code> 外，其實我們不怎麼需要回傳 <code class="language-plaintext highlighter-rouge">onComplete()</code> 與 <code class="language-plaintext highlighter-rouge">onError()</code> 。</p>
+
+<p>所以 RxJava 提供了 Action 這個 Interface ，包含了 <code class="language-plaintext highlighter-rouge">Action0</code> 與 <code class="language-plaintext highlighter-rouge">Action1</code> 。</p>
+
+<p><code class="language-plaintext highlighter-rouge">Action0</code> 與 <code class="language-plaintext highlighter-rouge">onComplete</code> 一樣是沒有參數與返回值的，因此可以利用 <code class="language-plaintext highlighter-rouge">Action0</code> 實作一個與 <code class="language-plaintext highlighter-rouge">onComplete</code> 一樣的方法。</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Action0</span> <span class="n">onCompletedAction</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Action0</span><span class="o">()</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">call</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="no">TAG</span><span class="o">,</span> <span class="s">"Completed!"</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">};</span>
+</code></pre></div></div>
+
+<p>而需要參數的 onError(err) 與 onNext(obj) ， 則利用相同需要傳入參數與返回值的 Action1 來實作。</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Action1</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">onNextAction</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Action1</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;()</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">call</span><span class="o">(</span><span class="nc">String</span> <span class="n">s</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="no">TAG</span><span class="o">,</span> <span class="s">"Item: "</span> <span class="o">+</span> <span class="n">s</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">};</span>
+<span class="nc">Action1</span><span class="o">&lt;</span><span class="nc">Throwable</span><span class="o">&gt;</span> <span class="n">onErrorAction</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Action1</span><span class="o">&lt;</span><span class="nc">Throwable</span><span class="o">&gt;()</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">call</span><span class="o">(</span><span class="nc">Throwable</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="no">TAG</span><span class="o">,</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+    <span class="o">}</span>
+<span class="o">};</span>
+</code></pre></div></div>
+
+<p>再來就可以依照需要的 Action 傳入 subscribe() 當中 !</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 只需要定義 onNext()</span>
+<span class="n">observable</span><span class="o">.</span><span class="na">subscribe</span><span class="o">(</span><span class="n">onNextAction</span><span class="o">);</span> 
+
+<span class="c1">// 以此類推</span>
+<span class="n">observable</span><span class="o">.</span><span class="na">subscribe</span><span class="o">(</span><span class="n">onNextAction</span><span class="o">,</span> <span class="n">onErrorAction</span><span class="o">);</span>
+<span class="n">observable</span><span class="o">.</span><span class="na">subscribe</span><span class="o">(</span><span class="n">onNextAction</span><span class="o">,</span> <span class="n">onErrorAction</span><span class="o">,</span> <span class="n">onCompletedAction</span><span class="o">);</span>
+</code></pre></div></div>
+
+<p>練習總結這三種用法 :</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kt">void</span> <span class="nf">createActions</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">Observable</span><span class="o">.</span><span class="na">just</span><span class="o">(</span><span class="s">"Hello!"</span><span class="o">,</span> <span class="s">"World!"</span><span class="o">).</span><span class="na">subscribe</span><span class="o">(</span><span class="k">new</span> <span class="nc">Action1</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;()</span> <span class="o">{</span>
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">call</span><span class="o">(</span><span class="nc">String</span> <span class="n">s</span><span class="o">)</span> <span class="o">{</span>
+                <span class="nc">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="no">TAG</span><span class="o">,</span> <span class="s">"Item: "</span> <span class="o">+</span> <span class="n">s</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">});</span>
+    <span class="o">}</span>
+</code></pre></div></div>
+<p>哇嗚，變得簡潔好多 ! 如果再用之後的 lambda 語法將變得無比華麗呢。</p>
+
+<hr>
+
+<h1 id="變換函數">
+<a class="anchor" href="#%E8%AE%8A%E6%8F%9B%E5%87%BD%E6%95%B8" aria-hidden="true"><span class="octicon octicon-link"></span></a>變換函數</h1>
+<p>什麼 ? 你說到現在只是用很炫的方式把字串 print 出來而已 ? 其實現在才要開始看到 RxJava 真正厲害的地方啦 ! RxJava 提供 map 、 flatmap 、 reduce 等方法，將傳進來的每個對象或對象本身進行加工處理並且轉換。</p>
+
+<h2 id="map">
+<a class="anchor" href="#map" aria-hidden="true"><span class="octicon octicon-link"></span></a>map</h2>
+<p>如果我們有一用戶列表，要抓出全部用戶名字，並添加到新的 List<string> 當中，用一般做法，可能需要用到迴圈之類的麻煩事，但 `map()` 不需要 :</string></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">User</span> <span class="n">user1</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">User</span><span class="o">();</span>
+<span class="o">...</span>
+
+<span class="nc">Observable</span><span class="o">.</span><span class="na">just</span><span class="o">(</span><span class="n">user1</span><span class="o">,</span> <span class="n">user2</span><span class="o">,</span> <span class="n">user2</span><span class="o">)</span>
+
+                <span class="c1">// 參數1 : 傳進來的類別</span>
+                <span class="c1">// 參數2 : 轉換完輸出的類別</span>
+
+                <span class="c1">// 讀進每個 User ， 並轉換為 name 這個 String 傳到下一個 subscribe 方法</span>
+                <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="k">new</span> <span class="nc">Func1</span><span class="o">&lt;</span><span class="nc">User</span><span class="o">,</span> <span class="nc">String</span><span class="o">&gt;()</span> <span class="o">{</span>
+                    <span class="nd">@Override</span>
+                    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">call</span><span class="o">(</span><span class="nc">User</span> <span class="n">user</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="nc">String</span> <span class="n">name</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="na">getName</span><span class="o">();</span>
+                        <span class="k">return</span> <span class="n">name</span><span class="o">;</span>
+                    <span class="o">}</span>
+                <span class="o">})</span>
+                <span class="c1">// 將讀取的 name 加到新的 List 中</span>
+                <span class="o">.</span><span class="na">subscribe</span><span class="o">(</span><span class="k">new</span> <span class="nc">Action1</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;()</span> <span class="o">{</span>
+                    <span class="nd">@Override</span>
+                    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">call</span><span class="o">(</span><span class="nc">String</span> <span class="n">s</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="n">nameList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+                    <span class="o">}</span>
+                <span class="o">});</span>
+</code></pre></div></div>
+<p>例子中的 <code class="language-plaintext highlighter-rouge">Func1</code> 這個 Interface ，跟 <code class="language-plaintext highlighter-rouge">Action1</code> 相似，同樣傳入參數進入的一個方法。不同的是， <code class="language-plaintext highlighter-rouge">Func1</code> 的 <code class="language-plaintext highlighter-rouge">call()</code> 是有返回值的 ! 
+阿 ! 原來數字是多少就是有幾個返回值呢 ! <code class="language-plaintext highlighter-rouge">FuncX</code> 就有 X 個返回值 ! 懂了 !</p>
+
+<h2 id="flatmap">
+<a class="anchor" href="#flatmap" aria-hidden="true"><span class="octicon octicon-link"></span></a>flatmap</h2>
+<p>如果這時要把每個用戶的每個文章標題都列出來，用 <code class="language-plaintext highlighter-rouge">map()</code> 的做法會需要用到迴圈 :</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Observable</span><span class="o">.</span><span class="na">just</span><span class="o">(</span><span class="n">user1</span><span class="o">,</span> <span class="n">user2</span><span class="o">,</span> <span class="n">user2</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="k">new</span> <span class="nc">Func1</span><span class="o">&lt;</span><span class="nc">User</span><span class="o">,</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Article</span><span class="o">&gt;&gt;()</span> <span class="o">{</span>
+                    <span class="nd">@Override</span>
+                    <span class="kd">public</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Article</span><span class="o">&gt;</span> <span class="nf">call</span><span class="o">(</span><span class="nc">User</span> <span class="n">user</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="k">return</span> <span class="n">user</span><span class="o">.</span><span class="na">getArticleList</span><span class="o">();</span>
+                    <span class="o">}</span>
+                <span class="o">})</span>
+                <span class="c1">// 將轉換成 List&lt;Article&gt; 傳入 Observer 中</span>
+                <span class="o">.</span><span class="na">subscribe</span><span class="o">(</span><span class="k">new</span> <span class="nc">Action1</span><span class="o">&lt;</span><span class="nc">List</span><span class="o">&lt;</span><span class="nc">Article</span><span class="o">&gt;&gt;()</span> <span class="o">{</span>
+                    <span class="nd">@Override</span>
+                    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">call</span><span class="o">(</span><span class="nc">List</span><span class="o">&lt;</span><span class="nc">Article</span><span class="o">&gt;</span> <span class="n">articleList</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="k">for</span> <span class="o">(</span><span class="nc">Article</span> <span class="n">a</span> <span class="o">:</span> <span class="n">articleList</span><span class="o">)</span> <span class="o">{</span>
+                        	<span class="nc">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="no">TAG</span><span class="o">,</span> <span class="n">a</span><span class="o">.</span><span class="na">getTitle</span><span class="o">());</span>
+                        <span class="o">}</span>
+                    <span class="o">}</span>
+                <span class="o">});</span>
+</code></pre></div></div>
+
+<p>由於 <code class="language-plaintext highlighter-rouge">map()</code> 只能夠實現 1對1 的轉換，所以出現另人煩躁的迴圈了。那要怎麼辦才能在 Observer 中每次都傳入一個 Article 類別呢 ? RxJava 還提供了一個 <code class="language-plaintext highlighter-rouge">flatmap()</code> 的方法。</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Observable</span><span class="o">.</span><span class="na">just</span><span class="o">(</span><span class="n">user1</span><span class="o">,</span> <span class="n">user2</span><span class="o">,</span> <span class="n">user2</span><span class="o">)</span>
+
+                <span class="c1">// User 類別將在 flatmap 中轉換成 Observable&lt;Article&gt; 類別</span>
+                <span class="o">.</span><span class="na">flatmap</span><span class="o">(</span><span class="k">new</span> <span class="nc">Func1</span><span class="o">&lt;</span><span class="nc">User</span><span class="o">,</span> <span class="nc">Observable</span><span class="o">&lt;</span><span class="nc">Article</span><span class="o">&gt;&gt;()</span> <span class="o">{</span>
+                    <span class="nd">@Override</span>
+                    <span class="kd">public</span> <span class="nc">Observable</span><span class="o">&lt;</span><span class="nc">Article</span><span class="o">&gt;</span> <span class="nf">call</span><span class="o">(</span><span class="nc">User</span> <span class="n">user</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="k">return</span> <span class="nc">Observable</span><span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="n">user</span><span class="o">.</span><span class="na">getArticleList</span><span class="o">());</span>
+                    <span class="o">}</span>
+                <span class="o">})</span>
+                <span class="c1">// 即可獲得序列中每個 Article</span>
+                <span class="o">.</span><span class="na">subscribe</span><span class="o">(</span><span class="k">new</span> <span class="nc">Action1</span><span class="o">&lt;</span><span class="nc">Article</span><span class="o">&gt;()</span> <span class="o">{</span>
+                    <span class="nd">@Override</span>
+                    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">call</span><span class="o">(</span><span class="nc">Article</span> <span class="n">article</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="nc">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="no">TAG</span><span class="o">,</span> <span class="n">article</span><span class="o">.</span><span class="na">getTitle</span><span class="o">());</span>
+                    <span class="o">}</span>
+                <span class="o">});</span>
+</code></pre></div></div>
+
+<p><img src="/images/markdown/learn-android-rxjava/flatmap.jpg" width="400"></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>角色</th>
+      <th>執行</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>紅色</td>
+      <td>進到 flatmap 後，經過新創建的 Observable 將 Article 1 和 Article 2 交給 Observer</td>
+    </tr>
+    <tr>
+      <td>紫色</td>
+      <td>進到 flatmap 後，經過新創建的 Observable 將 Article 3 和 Article 4 交給 Observer</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="其他轉換函數">
+<a class="anchor" href="#%E5%85%B6%E4%BB%96%E8%BD%89%E6%8F%9B%E5%87%BD%E6%95%B8" aria-hidden="true"><span class="octicon octicon-link"></span></a>其他轉換函數</h2>
+
+<ul>
+  <li>filter : 過濾掉無意義的數據</li>
+  <li>reduce : 跟 flatmap 相反，把數個數組組合成一個數據</li>
+</ul>
+
+<p>更多請參考 : <a href="https://www.zhihu.com/question/32209660">谁来讲讲Rxjava、rxandroid中的操作符的作用?</a></p>
+
+<hr>
+
+<h1 id="scheduler">
+<a class="anchor" href="#scheduler" aria-hidden="true"><span class="octicon octicon-link"></span></a>Scheduler</h1>
+<p>另外一個 RxJava 強大的原因，就是能夠隨意的切換執行緒 (Thread)。我們知道，如果要從事一些網路下載、加載圖片等較為耗時的工作，不能在 Android 的主執行緒，就是 UI 執行緒操作。所以會利用 Thread 或 AsyncTask 操作，類似這樣 :</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 新增一個執行緒來處理圖片 </span>
+<span class="k">new</span> <span class="nf">Thread</span><span class="o">()</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">run</span><span class="o">();</span>
+        <span class="c1">// 遍步 folder 列表</span>
+        <span class="k">for</span> <span class="o">(</span><span class="nc">File</span> <span class="n">folder</span> <span class="o">:</span> <span class="n">folders</span><span class="o">)</span> <span class="o">{</span>
+            <span class="nc">File</span><span class="o">[]</span> <span class="n">files</span> <span class="o">=</span> <span class="n">folder</span><span class="o">.</span><span class="na">listFiles</span><span class="o">();</span>
+
+            <span class="c1">// 遍步 file 列表</span>
+            <span class="k">for</span> <span class="o">(</span><span class="nc">File</span> <span class="n">file</span> <span class="o">:</span> <span class="n">files</span><span class="o">)</span> <span class="o">{</span>
+
+                <span class="c1">//  篩選 png 檔案</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">file</span><span class="o">.</span><span class="na">getName</span><span class="o">().</span><span class="na">endsWith</span><span class="o">(</span><span class="s">".png"</span><span class="o">))</span> <span class="o">{</span>
+                    <span class="kd">final</span> <span class="nc">Bitmap</span> <span class="n">bitmap</span> <span class="o">=</span> <span class="n">getBitmapFromFile</span><span class="o">(</span><span class="n">file</span><span class="o">);</span>
+
+                    <span class="c1">// 再回到 ui 執行緒添加圖片</span>
+                    <span class="n">getActivity</span><span class="o">().</span><span class="na">runOnUiThread</span><span class="o">(</span><span class="k">new</span> <span class="nc">Runnable</span><span class="o">()</span> <span class="o">{</span>
+                        <span class="nd">@Override</span>
+                        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+                            <span class="n">imageCollectorView</span><span class="o">.</span><span class="na">addImage</span><span class="o">(</span><span class="n">bitmap</span><span class="o">);</span>
+                        <span class="o">}</span>
+                    <span class="o">});</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}.</span><span class="na">start</span><span class="o">();</span>
+</code></pre></div></div>
+
+<p>但是 RxJava 提供 Scheduler 這個控制器，能夠切換執行緒，這邊先了解 Scheduler 的各種方法 :</p>
+
+<ul>
+  <li>Schedulers.immediate() : 直接在當下的執行緒運行，就等於不切換，是默認的方法</li>
+  <li>Schedulers.newThread() : 像 new Thread() 一樣啟動一個新執行緒，並在裡面操作</li>
+  <li>Schedulers.io(): 便於 I/O 操作的執行緒，與 <code class="language-plaintext highlighter-rouge">newThread()</code> 差不多，主要用於讀取文件、db等工作</li>
+  <li>Schedulers.computation() : 計算時所使用的執行緒，要與 io 執行緒區別</li>
+  <li>AndroidSchedulers.mainThread() : 指定回 Android UI 主執行緒運行</li>
+</ul>
+
+<p>有了這些方法，就能夠在創建 Observable 時，使用 <code class="language-plaintext highlighter-rouge">subscribeOn()</code> 和 <code class="language-plaintext highlighter-rouge">observeOn()</code> 來進行切換控制。</p>
+
+<ul>
+  <li>Observable.subscribeOn() : 指定 subscribe() 發生時所在的執行緒</li>
+  <li>Observable.observeOn() : 指定 subscribe() 返回時 Observer 為了消費事件所在的執行緒</li>
+</ul>
+
+<p>講了難懂，我們來用 RxJava 改造看看剛剛處理圖片的方法吧 :</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 從 folders 取出每個 folder </span>
+<span class="c1">// 再將每個 folder 中的 files 中的 file 各自取出</span>
+<span class="nc">Observable</span><span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="n">folders</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">flatMap</span><span class="o">(</span><span class="k">new</span> <span class="nc">Func1</span><span class="o">&lt;</span><span class="nc">File</span><span class="o">,</span> <span class="nc">Observable</span><span class="o">&lt;</span><span class="nc">File</span><span class="o">&gt;&gt;()</span> <span class="o">{</span>
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="nc">Observable</span><span class="o">&lt;</span><span class="nc">File</span><span class="o">&gt;</span> <span class="nf">call</span><span class="o">(</span><span class="nc">File</span> <span class="n">file</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="nc">Observable</span><span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="n">file</span><span class="o">.</span><span class="na">listFiles</span><span class="o">());</span>
+        <span class="o">}</span>
+    <span class="o">})</span>
+
+    <span class="c1">// 過濾出檔名結尾為 .png 的檔案</span>
+    <span class="o">.</span><span class="na">filter</span><span class="o">(</span><span class="k">new</span> <span class="nc">Func1</span><span class="o">&lt;</span><span class="nc">File</span><span class="o">,</span> <span class="nc">Boolean</span><span class="o">&gt;()</span> <span class="o">{</span>
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="nc">Boolean</span> <span class="nf">call</span><span class="o">(</span><span class="nc">File</span> <span class="n">file</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">file</span><span class="o">.</span><span class="na">getName</span><span class="o">().</span><span class="na">endsWith</span><span class="o">(</span><span class="s">".png"</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">})</span>
+
+    <span class="c1">// 將讀取的每個 File 轉成 Bitmap 輸出</span>
+    <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="k">new</span> <span class="nc">Func1</span><span class="o">&lt;</span><span class="nc">File</span><span class="o">,</span> <span class="nc">Bitmap</span><span class="o">&gt;()</span> <span class="o">{</span>
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="nc">Bitmap</span> <span class="nf">call</span><span class="o">(</span><span class="nc">File</span> <span class="n">file</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="nf">getBitmapFromFile</span><span class="o">(</span><span class="n">file</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">})</span>
+
+    <span class="c1">// 規定以上這些 subscribe 中的工作，都要在 IO 執行緒 操作</span>
+    <span class="o">.</span><span class="na">subscribeOn</span><span class="o">(</span><span class="nc">Schedulers</span><span class="o">.</span><span class="na">io</span><span class="o">())</span>
+
+    <span class="c1">// 而我們希望最後返回 Bitmap 並顯示在 imageView 的工作，回到 mainThread 執行</span>
+    <span class="o">.</span><span class="na">observeOn</span><span class="o">(</span><span class="nc">AndroidSchedulers</span><span class="o">.</span><span class="na">mainThread</span><span class="o">())</span>
+    <span class="o">.</span><span class="na">subscribe</span><span class="o">(</span><span class="k">new</span> <span class="nc">Action1</span><span class="o">&lt;</span><span class="nc">Bitmap</span><span class="o">&gt;()</span> <span class="o">{</span>
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">call</span><span class="o">(</span><span class="nc">Bitmap</span> <span class="n">bitmap</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// 就是 call 裡面的工作在 mainThread 執行</span>
+            <span class="n">imageCollectorView</span><span class="o">.</span><span class="na">addImage</span><span class="o">(</span><span class="n">bitmap</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">});</span>
+</code></pre></div></div>
+<p>簡單的加入了 <code class="language-plaintext highlighter-rouge">subscribeOn()</code> 與 <code class="language-plaintext highlighter-rouge">observeOn()</code> 就讓執行緒能夠隨意切換，真棒 !</p>
+
+<p>咦 ? 可是… 怎麼感覺程式碼變多了 ? 仔細看一遍，其實是邏輯變得簡單了呢 ! 程式碼中沒有任何迴圈什麼的，而且一條線的完成了整個工作，非常乾淨。重點是，若隔了好幾個月，突然要加入新的功能進來，用原本的方法寫的程式碼，又不愛加註解，可能要讀個幾分鐘才能搞懂吧 ! 而用 RxJava 的優勢就來了，一下就能搞懂自己當初在幹嘛，並且快速新增新功能進去 !</p>
+
+<h1 id="加入-lambda-function">
+<a class="anchor" href="#%E5%8A%A0%E5%85%A5-lambda-function" aria-hidden="true"><span class="octicon octicon-link"></span></a>加入 Lambda Function</h1>
+<p>或許在 <strong>「邏輯」</strong> 與 <strong>「程式碼」</strong> 的簡潔，需要有所取捨。 Java 8 所新增的 Lambda 語法能夠讓 <strong>程式碼</strong> 變得更簡潔，但相對的會較看不出他的邏輯。 或許應該把 Lambda 的學習在寫一篇文章的 … 不過先用看看，試著起到拋磚引玉的效果吧</p>
+
+<h2 id="setup">
+<a class="anchor" href="#setup" aria-hidden="true"><span class="octicon octicon-link"></span></a>Setup</h2>
+<p>要使用 Java 8 的 Lambda 語法，需要在 app Gradle 中配置 (Android Studio 2.3)</p>
+<div class="language-gradle highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">android</span> <span class="o">{</span>
+    <span class="n">defaultConfig</span> <span class="o">{</span>
+    <span class="o">...</span>
+        <span class="n">jackOptions</span> <span class="o">{</span>
+            <span class="n">enabled</span> <span class="kc">true</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="n">compileOptions</span> <span class="o">{</span>
+        <span class="n">targetCompatibility</span> <span class="mf">1.8</span>
+        <span class="n">sourceCompatibility</span> <span class="mf">1.8</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>其實自己也還沒有很認真學習過 Java 8 的各種寫法，所以這邊先點出一些常用的方法 :</p>
+
+<h2 id="lambda-語法">
+<a class="anchor" href="#lambda-%E8%AA%9E%E6%B3%95" aria-hidden="true"><span class="octicon octicon-link"></span></a>Lambda 語法</h2>
+<p>這是一般要設定 setOnClickListener 時的做法，可以看到 new View.OnClickListener() 之後的 onClick 方法，看起來太礙眼了，尤其是要定義一堆一樣的 Listener 時，版面之混亂 &gt;_&gt;</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">button</span><span class="o">.</span><span class="na">setOnClickListener</span><span class="o">(</span><span class="k">new</span> <span class="nc">View</span><span class="o">.</span><span class="na">OnClickListener</span><span class="o">()</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onClick</span><span class="o">(</span><span class="nc">View</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="no">TAG</span><span class="o">,</span> <span class="s">"Hello World!"</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">});</span>
+</code></pre></div></div>
+
+<p>所以 lambda 語法，提供了一種匿名(Anonymous) 表達式。因為要創建一個 OnClickListener 時，固定只使用到 onClick 方法，並且只要帶入參數 View ，所以就可以簡化成 ` (參數) -&gt; { 工作方法(參數) } `</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">button</span><span class="o">.</span><span class="na">setOnClickListener</span><span class="o">(</span><span class="n">view</span> <span class="o">-&gt;</span> <span class="o">{</span>
+   <span class="nc">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="no">TAG</span><span class="o">,</span> <span class="s">"Hello World!"</span><span class="o">);</span>
+<span class="o">});</span>
+
+<span class="c1">// 還可以更簡化</span>
+<span class="n">button</span><span class="o">.</span><span class="na">setOnClickListener</span><span class="o">(</span><span class="n">view</span> <span class="o">-&gt;</span> <span class="nc">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="no">TAG</span><span class="o">,</span> <span class="s">"Hello World!"</span><span class="o">));</span>
+
+<span class="c1">// 參數可以直接使用</span>
+<span class="n">button</span><span class="o">.</span><span class="na">setOnClickListener</span><span class="o">(</span><span class="n">view</span> <span class="o">-&gt;</span> <span class="nc">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="no">TAG</span><span class="o">,</span> <span class="n">view</span><span class="o">.</span><span class="na">getTag</span><span class="o">().</span><span class="na">toString</span><span class="o">()));</span>
+</code></pre></div></div>
+
+<h2 id="lambda-方法引用-method-reference">
+<a class="anchor" href="#lambda-%E6%96%B9%E6%B3%95%E5%BC%95%E7%94%A8-method-reference" aria-hidden="true"><span class="octicon octicon-link"></span></a>lambda 方法引用 (method reference)</h2>
+<p>lambda 還能更簡化，這個方法就是方法引用 (method reference) ， 長這樣 <code class="language-plaintext highlighter-rouge">::</code> 。
+用法就是，當你指定的 <code class="language-plaintext highlighter-rouge">工作方法</code> 中，那個參數跟你原本帶入的參數相同，就可以使用。
+有點模糊，試試看 :</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 假如我已經創建好一個方法來執行偵錯，只要帶入 View 就抓出他的 Tag 值</span>
+<span class="kd">private</span> <span class="kt">void</span> <span class="nf">show</span><span class="o">(</span><span class="nc">View</span> <span class="n">view</span><span class="o">)</span> <span class="o">{</span>
+    <span class="nc">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="no">TAG</span><span class="o">,</span> <span class="n">view</span><span class="o">.</span><span class="na">getTag</span><span class="o">().</span><span class="na">toString</span><span class="o">());</span>
+<span class="o">}</span>
+
+<span class="c1">// lambda 就會知道這個方法可以直接使用</span>
+<span class="n">button</span><span class="o">.</span><span class="na">setOnClickListener</span><span class="o">(</span><span class="k">this</span><span class="o">::</span><span class="n">show</span><span class="o">);</span>
+</code></pre></div></div>
+
+<h2 id="實際在-rxjava-操作">
+<a class="anchor" href="#%E5%AF%A6%E9%9A%9B%E5%9C%A8-rxjava-%E6%93%8D%E4%BD%9C" aria-hidden="true"><span class="octicon octicon-link"></span></a>實際在 RxJava 操作</h2>
+<p>學到這邊一定就知道， RxJava 有一堆 Action、Func 超煩的，來試試把他們簡化，一樣用剛剛處理圖片的流程 :</p>
+
+<p>由於 map 與 subscribe 都已經有相對方法了，所以 Android Studio 還會問我們要不要改成 <code class="language-plaintext highlighter-rouge">方法引用</code> ，真貼心 !</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Observable</span><span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="n">folders</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">flatMap</span><span class="o">(</span><span class="n">file</span> <span class="o">-&gt;</span> <span class="nc">Observable</span><span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="n">file</span><span class="o">.</span><span class="na">listFiles</span><span class="o">()))</span>
+                <span class="o">.</span><span class="na">filter</span><span class="o">(</span><span class="n">file</span> <span class="o">-&gt;</span> <span class="n">file</span><span class="o">.</span><span class="na">getName</span><span class="o">().</span><span class="na">endsWith</span><span class="o">(</span><span class="s">".png"</span><span class="o">))</span>
+                <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="k">this</span><span class="o">::</span><span class="n">getBitmapFromFile</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">subscribeOn</span><span class="o">(</span><span class="nc">Schedulers</span><span class="o">.</span><span class="na">io</span><span class="o">())</span>
+                <span class="o">.</span><span class="na">observeOn</span><span class="o">(</span><span class="nc">AndroidSchedulers</span><span class="o">.</span><span class="na">mainThread</span><span class="o">())</span>
+                <span class="o">.</span><span class="na">subscribe</span><span class="o">(</span><span class="k">this</span><span class="o">::</span><span class="n">showBitmap</span><span class="o">);</span>
+</code></pre></div></div>
+
+<p>哇塞，剛剛有一定長度的程式碼，就被縮減為 7 行，而且還保留一定的邏輯在，好有成就感阿 !</p>
+
+<hr>
+
+<h1 id="結語">
+<a class="anchor" href="#%E7%B5%90%E8%AA%9E" aria-hidden="true"><span class="octicon octicon-link"></span></a>結語</h1>
+<p>學會這篇文章的內容，差不多就算入門了 RxJava ，不過 RxJava 還有很多東西可以學習，像是 RxBinding 或是與 Retrofit 一起使用等。這些在邊實作邊學習吧 ! 現在重要的是多用 RxJava 開發，熟能生巧 !</p>
+
+<h1 id="reference">
+<a class="anchor" href="#reference" aria-hidden="true"><span class="octicon octicon-link"></span></a>Reference</h1>
+
+<ul>
+  <li><a href="http://www.jianshu.com/p/19cac3c5b106">【Android】RxJava的使用（一）基本用法</a></li>
+  <li><a href="http://www.jianshu.com/p/6d1ef9f43cdc">详细解析RxAndroid的使用方式</a></li>
+  <li><a href="http://gank.io/post/560e15be2dca930e00da1083#toc_15">给 Android 开发者的 RxJava 详解 - 扔物线</a></li>
+</ul>
+
+  </div><a class="u-url" href="/android/rxjava/2017/05/05/learn-android-rxjava.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+        <ul class="contact-list">
+          <li class="p-name">Jay Wang</li>
+          <li><a class="u-email" href="mailto:windsuzu@gmail.com">windsuzu@gmail.com</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <p>Learning, Blogging, Building</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://www.facebook.com/windsuzu" title="windsuzu"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#facebook"></use></svg></a></li><li><a rel="me" href="https://github.com/windsuzu" title="windsuzu"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://www.linkedin.com/in/windsuzu" title="windsuzu"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

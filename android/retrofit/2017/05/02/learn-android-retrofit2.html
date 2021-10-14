@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>學習 Android Retrofit 2 | Jay Wang</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="學習 Android Retrofit 2" />
+<meta name="author" content="Jay Wang" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="學習 Android Retrofit 2" />
+<meta property="og:description" content="學習 Android Retrofit 2" />
+<link rel="canonical" href="https://jaywang.xyz/android/retrofit/2017/05/02/learn-android-retrofit2.html" />
+<meta property="og:url" content="https://jaywang.xyz/android/retrofit/2017/05/02/learn-android-retrofit2.html" />
+<meta property="og:site_name" content="Jay Wang" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-05-02T12:59:05-05:00" />
+<script type="application/ld+json">
+{"datePublished":"2017-05-02T12:59:05-05:00","url":"https://jaywang.xyz/android/retrofit/2017/05/02/learn-android-retrofit2.html","@type":"BlogPosting","headline":"學習 Android Retrofit 2","dateModified":"2017-05-02T12:59:05-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://jaywang.xyz/android/retrofit/2017/05/02/learn-android-retrofit2.html"},"author":{"@type":"Person","name":"Jay Wang"},"description":"學習 Android Retrofit 2","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://jaywang.xyz/feed.xml" title="Jay Wang" /><!-- the google_analytics_id gets auto inserted from the config file -->
+
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0LDQ23SQFE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-0LDQ23SQFE');
+</script>
+
+
+<link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js" integrity="sha512-Do7uJAaHZm5OLrIv/yN4w0iG1dbu01kzdMNnFfu/mAqgUk6Nniv2JYHcwH+cNwjqgLcqcuBBk+JRvprLVI8azg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha512-0doc9hKxR3PYwso42RD1p5ySZpzzuDiOwMrdCEh2WdJZCjcmFKc/wEnL+z8fBQrnHoiNWbo+3fiGkOYXBdQp4A==" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Jay Wang</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About Me</a><a class="page-link" href="/portfolio/">Portfolio</a><a class="page-link" href="/resume/">Résumé</a><a class="page-link" href="/search/">Search</a><a class="page-link" href="/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">學習 Android Retrofit 2</h1><p class="page-description">學習 Android Retrofit 2</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2017-05-02T12:59:05-05:00" itemprop="datePublished">
+        May 2, 2017
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      1 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/categories/#Android">Android</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#Retrofit">Retrofit</a>
+        
+      
+      </p>
+    
+
+    </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h1"><a href="#retrofit-2-介紹">Retrofit 2 介紹</a></li>
+<li class="toc-entry toc-h1"><a href="#retrofit-2-基本的用法">Retrofit 2 基本的用法</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#setup">Setup</a></li>
+<li class="toc-entry toc-h2"><a href="#創建裝載數據-class">創建裝載數據 Class</a></li>
+<li class="toc-entry toc-h2"><a href="#創建-retrofit-物件與實作-interface">創建 Retrofit 物件與實作 Interface</a></li>
+<li class="toc-entry toc-h2"><a href="#創建要去請求-api-的-client-service">創建要去請求 API 的 Client Service</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#http-api-不同的請求方法">HTTP API 不同的請求方法</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#get-method">GET Method</a></li>
+<li class="toc-entry toc-h2"><a href="#post-method">POST Method</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#reference">Reference</a></li>
+</ul><h1 id="retrofit-2-介紹">
+<a class="anchor" href="#retrofit-2-%E4%BB%8B%E7%B4%B9" aria-hidden="true"><span class="octicon octicon-link"></span></a>Retrofit 2 介紹</h1>
+
+<p>Retrofit 是什麼 ? Retrofit 跟 Volley 一樣是 Android 一種 HTTP 請求的框架，但實際操作了一遍，感覺比 Volley 還要更簡便，而且能夠支援 RxJava。另外，Retrofit 2 使用 REST API 設計，由 RESTful Client 向 Server 發出請求。</p>
+
+<blockquote>
+  <p>有關 RESTful API 的相關文章:</p>
+  <ul>
+    <li><a href="http://www.ruanyifeng.com/blog/2014/05/restful_api.html">RESTful API 设计指南</a></li>
+    <li><a href="http://ithelp.ithome.com.tw/articles/10157431">定義 1 - 什麼是 REST/RESTful ?</a></li>
+  </ul>
+</blockquote>
+
+<p><img src="/images/markdown/learn-android-retrofit2/retrofit.png" width="300"></p>
+
+<ol>
+  <li>創建一個能裝載數據的 Class (Model or POJO)，</li>
+  <li>創建 Interface 來管理各種 HTTP APIs</li>
+  <li>最後創建 REST Client 發出請求，等待回傳 JSON 數據，使用內建的 Gson 解析序列</li>
+</ol>
+
+<hr>
+
+<h1 id="retrofit-2-基本的用法">
+<a class="anchor" href="#retrofit-2-%E5%9F%BA%E6%9C%AC%E7%9A%84%E7%94%A8%E6%B3%95" aria-hidden="true"><span class="octicon octicon-link"></span></a>Retrofit 2 基本的用法</h1>
+
+<h2 id="setup">
+<a class="anchor" href="#setup" aria-hidden="true"><span class="octicon octicon-link"></span></a>Setup</h2>
+
+<ul>
+  <li>Gradle 配置</li>
+</ul>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>compile 'com.squareup.retrofit2:retrofit:2.2.0'
+compile 'com.squareup.retrofit2:converter-gson:2.2.0'
+</code></pre></div></div>
+
+<ul>
+  <li>別忘了到 manifest 新增網路的權限</li>
+</ul>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;uses-permission</span> <span class="na">android:name=</span><span class="s">"android.permission.INTERNET"</span><span class="nt">/&gt;</span>
+</code></pre></div></div>
+
+<hr>
+
+<h2 id="創建裝載數據-class">
+<a class="anchor" href="#%E5%89%B5%E5%BB%BA%E8%A3%9D%E8%BC%89%E6%95%B8%E6%93%9A-class" aria-hidden="true"><span class="octicon octicon-link"></span></a>創建裝載數據 Class</h2>
+
+<p>這邊可以使用 Android Studio 的插件 GsonFormat ，輕鬆將 JSON 轉換為 JavaBean 類別。</p>
+
+<div class="Toast">
+   <span class="Toast-icon"><svg class="octicon octicon-info" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8zm6.5-.25A.75.75 0 017.25 7h1a.75.75 0 01.75.75v2.75h.25a.75.75 0 010 1.5h-2a.75.75 0 010-1.5h.25v-2h-.25a.75.75 0 01-.75-.75zM8 6a1 1 0 100-2 1 1 0 000 2z"></path></svg></span>
+   <span class="Toast-content">安裝方法: <br> 1. Settings<br> 2. Plugins<br> 3. Browse Repositories<br> 4. 搜尋 GsonFormat<br> 5. restart</span>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Step1</th>
+      <th>Step2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><img src="/images/markdown/learn-android-retrofit2/gsonformat1.png"></td>
+      <td><img src="/images/markdown/learn-android-retrofit2/gsonformat2.png"></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>就能夠直接產生一個 JavaBean 的類別 !</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">User</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">email</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">name</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setName</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getEmail</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">email</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setEmail</span><span class="o">(</span><span class="nc">String</span> <span class="n">email</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">email</span> <span class="o">=</span> <span class="n">email</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="創建-retrofit-物件與實作-interface">
+<a class="anchor" href="#%E5%89%B5%E5%BB%BA-retrofit-%E7%89%A9%E4%BB%B6%E8%88%87%E5%AF%A6%E4%BD%9C-interface" aria-hidden="true"><span class="octicon octicon-link"></span></a>創建 Retrofit 物件與實作 Interface</h2>
+<p>假設今天要到 <code class="language-plaintext highlighter-rouge">http://www.api.com/user/{userid}</code> 取得 user 的資料。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Retrofit</span> <span class="n">retrofit</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Retrofit</span><span class="o">.</span><span class="na">Builder</span><span class="o">()</span>
+            <span class="o">.</span><span class="na">addConverterFactory</span><span class="o">(</span><span class="nc">GsonConverterFactory</span><span class="o">.</span><span class="na">create</span><span class="o">())</span> <span class="c1">// 使用 Gson 解析</span>
+            <span class="o">.</span><span class="na">baseUrl</span><span class="o">(</span><span class="s">"http://www.api.com/"</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+
+
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">ApiService</span> <span class="o">{</span>
+  <span class="c1">// 會返回一個 call 類別</span>
+  <span class="nd">@GET</span><span class="o">(</span><span class="s">"user/{userid}"</span><span class="o">)</span>
+  <span class="nc">Call</span><span class="o">&lt;</span><span class="nc">User</span><span class="o">&gt;</span> <span class="nf">getUser</span><span class="o">(</span><span class="nd">@Path</span><span class="o">(</span><span class="s">"userid"</span><span class="o">)</span> <span class="nc">String</span> <span class="n">userid</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="創建要去請求-api-的-client-service">
+<a class="anchor" href="#%E5%89%B5%E5%BB%BA%E8%A6%81%E5%8E%BB%E8%AB%8B%E6%B1%82-api-%E7%9A%84-client-service" aria-hidden="true"><span class="octicon octicon-link"></span></a>創建要去請求 API 的 Client Service</h2>
+
+<ul>
+  <li>創建
+    <div class="language-java highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code><span class="nc">Api</span> <span class="n">apiService</span> <span class="o">=</span> <span class="n">retrofit</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="nc">ApiService</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="nc">Call</span><span class="o">&lt;</span><span class="nc">User</span><span class="o">&gt;</span> <span class="n">call</span> <span class="o">=</span> <span class="n">apiService</span><span class="o">.</span><span class="na">getUser</span><span class="o">(</span><span class="s">"123"</span><span class="o">);</span>
+</code></pre></div>    </div>
+  </li>
+  <li>發出請求 (同步)
+    <div class="language-java highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code><span class="nc">User</span> <span class="n">user</span> <span class="o">=</span> <span class="n">call</span><span class="o">.</span><span class="na">execute</span><span class="o">();</span>
+</code></pre></div>    </div>
+  </li>
+  <li>發出請求 (異步)
+    <div class="language-java highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code><span class="n">call</span><span class="o">.</span><span class="na">enqueue</span><span class="o">(</span><span class="k">new</span> <span class="nc">Callback</span><span class="o">&lt;</span><span class="nc">User</span><span class="o">&gt;(){</span>  
+       <span class="nd">@Override</span>  
+       <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onResponse</span><span class="o">(</span><span class="nc">Response</span><span class="o">&lt;</span><span class="nc">User</span><span class="o">&gt;</span> <span class="n">response</span><span class="o">)</span> <span class="o">{</span>  
+           <span class="c1">//成功後，使用 response.body() 得到結果</span>
+           <span class="nc">User</span> <span class="n">user</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="na">body</span><span class="o">();</span>
+        <span class="o">}</span>  
+        <span class="nd">@Override</span>  
+        <span class="kd">public</span> <span class="nf">voidonFailure</span><span class="o">(</span><span class="nc">Throwable</span> <span class="n">t</span><span class="o">)</span> <span class="o">{</span>  
+           <span class="c1">// 請求失敗</span>
+       <span class="o">}</span>  
+   <span class="o">});</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<hr>
+
+<h1 id="http-api-不同的請求方法">
+<a class="anchor" href="#http-api-%E4%B8%8D%E5%90%8C%E7%9A%84%E8%AB%8B%E6%B1%82%E6%96%B9%E6%B3%95" aria-hidden="true"><span class="octicon octicon-link"></span></a>HTTP API 不同的請求方法</h1>
+<p>以下來自官方的文檔，作為記憶之用，請參考 <a href="http://square.github.io/retrofit/">Retrofit Documentation</a></p>
+
+<blockquote>
+  <p>另外還可以參考:</p>
+  <ul>
+    <li><a href="https://bng86.gitbooks.io/android-third-party-/content/retrofit.html">Retrofit · Android third-party 使用心得</a></li>
+    <li><a href="http://www.devwiki.net/2016/03/19/Retrofit-Use-Course-2/">Retrofit使用教程(二) | DevWiki Blog</a></li>
+  </ul>
+</blockquote>
+
+<h2 id="get-method">
+<a class="anchor" href="#get-method" aria-hidden="true"><span class="octicon octicon-link"></span></a>GET Method</h2>
+
+<ul>
+  <li>假設要讀取用戶列表，不用用到任何參數
+    <div class="language-java highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code><span class="nd">@GET</span><span class="o">(</span><span class="s">"users/list"</span><span class="o">)</span>
+<span class="nc">Call</span><span class="o">&lt;</span><span class="nc">List</span><span class="o">&lt;</span><span class="nc">User</span><span class="o">&gt;&gt;</span> <span class="nf">getUsers</span><span class="o">();</span>
+</code></pre></div>    </div>
+  </li>
+  <li>可以帶入 query
+    <div class="language-java highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code><span class="nd">@GET</span><span class="o">(</span><span class="s">"users/list?sort=desc"</span><span class="o">)</span>
+</code></pre></div>    </div>
+  </li>
+  <li>URL 帶入參數
+    <div class="language-java highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code><span class="nd">@GET</span><span class="o">(</span><span class="s">"group/{id}/users"</span><span class="o">)</span>
+<span class="nc">Call</span><span class="o">&lt;</span><span class="nc">List</span><span class="o">&lt;</span><span class="nc">User</span><span class="o">&gt;&gt;</span> <span class="nf">groupList</span><span class="o">(</span><span class="nd">@Path</span><span class="o">(</span><span class="s">"id"</span><span class="o">)</span> <span class="kt">int</span> <span class="n">groupId</span><span class="o">);</span>
+</code></pre></div>    </div>
+  </li>
+  <li>若要邊帶入 URL 參數並且 query
+    <div class="language-java highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code><span class="nd">@GET</span><span class="o">(</span><span class="s">"group/{id}/users"</span><span class="o">)</span>
+<span class="nc">Call</span><span class="o">&lt;</span><span class="nc">List</span><span class="o">&lt;</span><span class="nc">User</span><span class="o">&gt;&gt;</span> <span class="nf">groupList</span><span class="o">(</span><span class="nd">@Path</span><span class="o">(</span><span class="s">"id"</span><span class="o">)</span> <span class="kt">int</span> <span class="n">groupId</span><span class="o">,</span> <span class="nd">@Query</span><span class="o">(</span><span class="s">"sort"</span><span class="o">)</span> <span class="nc">String</span> <span class="n">sort</span><span class="o">);</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h2 id="post-method">
+<a class="anchor" href="#post-method" aria-hidden="true"><span class="octicon octicon-link"></span></a>POST Method</h2>
+
+<ul>
+  <li>假設要更新使用者資料，需要使用 <code class="language-plaintext highlighter-rouge">form-encoded</code>
+    <div class="language-java highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code><span class="nd">@FormUrlEncoded</span>
+<span class="nd">@POST</span><span class="o">(</span><span class="s">"user/edit"</span><span class="o">)</span>
+<span class="nc">Call</span><span class="o">&lt;</span><span class="nc">User</span><span class="o">&gt;</span> <span class="nf">updateUser</span><span class="o">(</span><span class="nd">@Field</span><span class="o">(</span><span class="s">"first_name"</span><span class="o">)</span> <span class="nc">String</span> <span class="n">first</span><span class="o">,</span> <span class="nd">@Field</span><span class="o">(</span><span class="s">"last_name"</span><span class="o">)</span> <span class="nc">String</span> <span class="n">last</span><span class="o">);</span>
+</code></pre></div>    </div>
+  </li>
+  <li>需要利用 <code class="language-plaintext highlighter-rouge">multipart</code> 上傳文件
+    <div class="language-java highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code><span class="nd">@Multipart</span>
+<span class="nd">@PUT</span><span class="o">(</span><span class="s">"user/photo"</span><span class="o">)</span>
+<span class="nc">Call</span><span class="o">&lt;</span><span class="nc">User</span><span class="o">&gt;</span> <span class="nf">updateUser</span><span class="o">(</span><span class="nd">@Part</span><span class="o">(</span><span class="s">"photo"</span><span class="o">)</span> <span class="nc">RequestBody</span> <span class="n">photo</span><span class="o">,</span> <span class="nd">@Part</span><span class="o">(</span><span class="s">"description"</span><span class="o">)</span> <span class="nc">RequestBody</span> <span class="n">description</span><span class="o">);</span>
+</code></pre></div>    </div>
+    <hr>
+  </li>
+</ul>
+
+<p>使用過 Retrofit 的確比 Volley 的用法更簡潔方便了，再來就要試試怎麼樣引入 RxJava 當中。</p>
+
+<ul>
+  <li>查看前一篇: <a href="/android/rxjava/2017/05/05/learn-android-rxjava.html">學習 Android RxJava</a>
+</li>
+  <li>查看下一篇: <a href="/android/rxjava/retrofit/2017/05/05/learn-android-rxjava-with-retrofit.html">學習 RxJava 結合 Retrofit</a>
+</li>
+</ul>
+
+<h1 id="reference">
+<a class="anchor" href="#reference" aria-hidden="true"><span class="octicon octicon-link"></span></a>Reference</h1>
+
+<ul>
+  <li><a href="http://www.jianshu.com/p/7efdc3477269">【Android】Retrofit 2.0 的使用</a></li>
+  <li><a href="http://wuxiaolong.me/2016/01/15/retrofit/">Android Retrofit 2.0使用</a></li>
+  <li><a href="http://www.jianshu.com/p/308f3c54abdd">你真的会用Retrofit2吗?Retrofit2完全教程</a></li>
+  <li><a href="http://bxbxbai.github.io/2015/12/13/retrofit2/">Retrofit2源碼解析</a></li>
+</ul>
+
+  </div><a class="u-url" href="/android/retrofit/2017/05/02/learn-android-retrofit2.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+        <ul class="contact-list">
+          <li class="p-name">Jay Wang</li>
+          <li><a class="u-email" href="mailto:windsuzu@gmail.com">windsuzu@gmail.com</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <p>Learning, Blogging, Building</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://www.facebook.com/windsuzu" title="windsuzu"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#facebook"></use></svg></a></li><li><a rel="me" href="https://github.com/windsuzu" title="windsuzu"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://www.linkedin.com/in/windsuzu" title="windsuzu"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

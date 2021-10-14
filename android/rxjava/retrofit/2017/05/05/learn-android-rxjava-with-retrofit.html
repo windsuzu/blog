@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>學習 RxJava 結合 Retrofit | Jay Wang</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="學習 RxJava 結合 Retrofit" />
+<meta name="author" content="Jay Wang" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="學習 RxJava 結合 Retrofit" />
+<meta property="og:description" content="學習 RxJava 結合 Retrofit" />
+<link rel="canonical" href="https://jaywang.xyz/android/rxjava/retrofit/2017/05/05/learn-android-rxjava-with-retrofit.html" />
+<meta property="og:url" content="https://jaywang.xyz/android/rxjava/retrofit/2017/05/05/learn-android-rxjava-with-retrofit.html" />
+<meta property="og:site_name" content="Jay Wang" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-05-05T13:14:45-05:00" />
+<script type="application/ld+json">
+{"datePublished":"2017-05-05T13:14:45-05:00","url":"https://jaywang.xyz/android/rxjava/retrofit/2017/05/05/learn-android-rxjava-with-retrofit.html","@type":"BlogPosting","headline":"學習 RxJava 結合 Retrofit","dateModified":"2017-05-05T13:14:45-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://jaywang.xyz/android/rxjava/retrofit/2017/05/05/learn-android-rxjava-with-retrofit.html"},"author":{"@type":"Person","name":"Jay Wang"},"description":"學習 RxJava 結合 Retrofit","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://jaywang.xyz/feed.xml" title="Jay Wang" /><!-- the google_analytics_id gets auto inserted from the config file -->
+
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0LDQ23SQFE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-0LDQ23SQFE');
+</script>
+
+
+<link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js" integrity="sha512-Do7uJAaHZm5OLrIv/yN4w0iG1dbu01kzdMNnFfu/mAqgUk6Nniv2JYHcwH+cNwjqgLcqcuBBk+JRvprLVI8azg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha512-0doc9hKxR3PYwso42RD1p5ySZpzzuDiOwMrdCEh2WdJZCjcmFKc/wEnL+z8fBQrnHoiNWbo+3fiGkOYXBdQp4A==" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Jay Wang</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About Me</a><a class="page-link" href="/portfolio/">Portfolio</a><a class="page-link" href="/resume/">Résumé</a><a class="page-link" href="/search/">Search</a><a class="page-link" href="/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">學習 RxJava 結合 Retrofit</h1><p class="page-description">學習 RxJava 結合 Retrofit</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2017-05-05T13:14:45-05:00" itemprop="datePublished">
+        May 5, 2017
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      1 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/categories/#Android">Android</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#RxJava">RxJava</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#Retrofit">Retrofit</a>
+        
+      
+      </p>
+    
+
+    </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h1"><a href="#setup">Setup</a></li>
+<li class="toc-entry toc-h1"><a href="#實作-retrofit-service-interface">實作 Retrofit Service Interface</a></li>
+<li class="toc-entry toc-h1"><a href="#創建-retrofit-元件">創建 Retrofit 元件</a></li>
+<li class="toc-entry toc-h1"><a href="#實作-retrofit--rxjava-異步網路請求">實作 Retrofit + RxJava 異步網路請求</a></li>
+<li class="toc-entry toc-h1"><a href="#結語">結語</a></li>
+</ul><p>個別學習完 RxJava 與 Retrofit 之後，是令人期待的合體了呢 ! 查看前面的文章:</p>
+
+<ul>
+  <li><a href="/android/rxjava/2017/05/05/learn-android-rxjava.html">學習 Android RxJava</a></li>
+  <li><a href="/android/retrofit/2017/05/02/learn-android-retrofit2.html">學習 Android Retrofit 2</a></li>
+</ul>
+
+<h1 id="setup">
+<a class="anchor" href="#setup" aria-hidden="true"><span class="octicon octicon-link"></span></a>Setup</h1>
+
+<p>設置 Gradle 除了 RxJava 與 Retrofit 的 Library 以外，還要再多設置讓兩者能夠結合的 adapter 套件。</p>
+
+<div class="language-gradle highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">compile</span> <span class="s2">"io.reactivex.rxjava2:rxjava:2.x.y"</span>
+<span class="n">compile</span> <span class="s1">'io.reactivex.rxjava2:rxandroid:2.0.1'</span>
+
+<span class="n">compile</span> <span class="s1">'com.squareup.retrofit2:retrofit:2.2.0'</span>
+<span class="n">compile</span> <span class="s1">'com.squareup.retrofit2:converter-gson:2.2.0'</span>
+<span class="n">compile</span> <span class="s1">'com.squareup.retrofit2:adapter-rxjava2:2.2.0'</span>
+</code></pre></div></div>
+
+<div class="Toast Toast--warning googoo">
+   <span class="Toast-icon"><svg class="octicon octicon-alert" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8.22 1.754a.25.25 0 00-.44 0L1.698 13.132a.25.25 0 00.22.368h12.164a.25.25 0 00.22-.368L8.22 1.754zm-1.763-.707c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0114.082 15H1.918a1.75 1.75 0 01-1.543-2.575L6.457 1.047zM9 11a1 1 0 11-2 0 1 1 0 012 0zm-.25-5.25a.75.75 0 00-1.5 0v2.5a.75.75 0 001.5 0v-2.5z"></path></svg></span>
+   <span class="Toast-content">要記得 retrofit 與他的快樂夥伴的版本要一致</span>
+</div>
+
+<p>在設置這邊發生了好多錯誤，原來之前學習時用的是 RxJava1，所以跟 Retrofit2 的 Adapter 配不起來； 1 和 2 有一些差別，可以到 <a href="https://github.com/ReactiveX/RxJava/wiki/What%27s-different-in-2.0">RxJava Github - What’s different in 2.0</a> 查看。</p>
+
+<h1 id="實作-retrofit-service-interface">
+<a class="anchor" href="#%E5%AF%A6%E4%BD%9C-retrofit-service-interface" aria-hidden="true"><span class="octicon octicon-link"></span></a>實作 Retrofit Service Interface</h1>
+
+<p>一樣拿 GitHub Api 測試看看 :</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">GitHubService</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">final</span> <span class="kd">static</span> <span class="nc">String</span> <span class="no">BASEURL</span> <span class="o">=</span> <span class="s">"http://api.github.com/"</span><span class="o">;</span>
+
+    <span class="nd">@GET</span><span class="o">(</span><span class="s">"users/{userId}"</span><span class="o">)</span>
+    <span class="nc">Observable</span><span class="o">&lt;</span><span class="nc">GitHubUser</span><span class="o">&gt;</span> <span class="nf">getUser</span><span class="o">(</span><span class="nd">@Path</span><span class="o">(</span><span class="s">"userId"</span><span class="o">)</span> <span class="nc">String</span> <span class="n">userId</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>這邊要注意的是原本的 Call<githubuser> 變為 Observable<githubuser> ，因為是用 RxJava 觀察者模式訂閱，所以必須要返回一個 Observable 對象，才能夠進行接續的 `subscribeOn()` 、 `subScribe()` 等 RxJava 操作。其餘的都跟只有 Retrofit 時一樣。</githubuser></githubuser></p>
+
+<h1 id="創建-retrofit-元件">
+<a class="anchor" href="#%E5%89%B5%E5%BB%BA-retrofit-%E5%85%83%E4%BB%B6" aria-hidden="true"><span class="octicon octicon-link"></span></a>創建 Retrofit 元件</h1>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="nc">Retrofit</span> <span class="nf">provideRetrofit</span><span class="o">(</span><span class="nc">String</span> <span class="n">baseUrl</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nc">Retrofit</span><span class="o">.</span><span class="na">Builder</span><span class="o">()</span>
+            <span class="o">.</span><span class="na">addConverterFactory</span><span class="o">(</span><span class="nc">GsonConverterFactory</span><span class="o">.</span><span class="na">create</span><span class="o">())</span>
+            <span class="o">.</span><span class="na">addCallAdapterFactory</span><span class="o">(</span><span class="nc">RxJava2CallAdapterFactory</span><span class="o">.</span><span class="na">create</span><span class="o">())</span>
+            <span class="o">.</span><span class="na">baseUrl</span><span class="o">(</span><span class="n">baseUrl</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>這邊除了原本添加的 Gson 轉換器，還要新增 Retrofit 與 RxJava 相依的 RxJava2CallAdapterFactory 。</p>
+
+<h1 id="實作-retrofit--rxjava-異步網路請求">
+<a class="anchor" href="#%E5%AF%A6%E4%BD%9C-retrofit--rxjava-%E7%95%B0%E6%AD%A5%E7%B6%B2%E8%B7%AF%E8%AB%8B%E6%B1%82" aria-hidden="true"><span class="octicon octicon-link"></span></a>實作 Retrofit + RxJava 異步網路請求</h1>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">GitHubService</span> <span class="n">service</span> <span class="o">=</span> <span class="n">provideRetrofit</span><span class="o">(</span><span class="nc">GitHubService</span><span class="o">.</span><span class="na">BASEURL</span><span class="o">).</span><span class="na">create</span><span class="o">(</span><span class="nc">GitHubService</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+
+<span class="n">service</span><span class="o">.</span><span class="na">getUser</span><span class="o">(</span><span class="no">USERID</span><span class="o">)</span>
+        <span class="o">.</span><span class="na">subscribeOn</span><span class="o">(</span><span class="nc">Schedulers</span><span class="o">.</span><span class="na">io</span><span class="o">())</span>
+        <span class="o">.</span><span class="na">observeOn</span><span class="o">(</span><span class="nc">AndroidSchedulers</span><span class="o">.</span><span class="na">mainThread</span><span class="o">())</span>
+        <span class="o">.</span><span class="na">subscribe</span><span class="o">(</span><span class="n">user</span> <span class="o">-&gt;</span> <span class="nc">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="no">TAG</span><span class="o">,</span> <span class="n">user</span><span class="o">.</span><span class="na">getName</span><span class="o">()));</span>
+</code></pre></div></div>
+
+<p>先利用 <code class="language-plaintext highlighter-rouge">getUser()</code> 獲得 Observable ，再開始使用 RxJava 的方法，能夠歷經 map 、 fliter 、 flatMap ，最後傳給 Observer 進行主執行緒的操作。</p>
+
+<h1 id="結語">
+<a class="anchor" href="#%E7%B5%90%E8%AA%9E" aria-hidden="true"><span class="octicon octicon-link"></span></a>結語</h1>
+<p>除此之外，若是像設計登入流程，伺服器可能會先回傳一個 token ，需要再以 token 去取得用戶資料。這時可能就要使用 flatMap 再一次發送 token 取得資料。</p>
+
+<p>或是登入時需要實作 <code class="language-plaintext highlighter-rouge">onError()</code> 的響應，一方面又想要維持 lambda 語法的簡潔，那就必須要另外新增兩個 <code class="language-plaintext highlighter-rouge">Action (Consumer)</code> ，來實作 <code class="language-plaintext highlighter-rouge">onNext()</code> 、 <code class="language-plaintext highlighter-rouge">onError()</code> 的方法，再放入 <code class="language-plaintext highlighter-rouge">subScribe</code> 中。</p>
+
+<blockquote>
+  <p>上面說的登入設計可以參考這篇文章:</p>
+  <ul>
+    <li><a href="http://www.jianshu.com/p/1fb294ec7e3b">【Android】RxJava + Retrofit完成网络请求</a></li>
+  </ul>
+</blockquote>
+
+  </div><a class="u-url" href="/android/rxjava/retrofit/2017/05/05/learn-android-rxjava-with-retrofit.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+        <ul class="contact-list">
+          <li class="p-name">Jay Wang</li>
+          <li><a class="u-email" href="mailto:windsuzu@gmail.com">windsuzu@gmail.com</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <p>Learning, Blogging, Building</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://www.facebook.com/windsuzu" title="windsuzu"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#facebook"></use></svg></a></li><li><a rel="me" href="https://github.com/windsuzu" title="windsuzu"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://www.linkedin.com/in/windsuzu" title="windsuzu"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

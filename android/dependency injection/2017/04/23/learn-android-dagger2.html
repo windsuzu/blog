@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>學習 Android 依賴注入框架 Dagger2 | Jay Wang</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="學習 Android 依賴注入框架 Dagger2" />
+<meta name="author" content="Jay Wang" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="學習 Android 依賴注入框架 Dagger2" />
+<meta property="og:description" content="學習 Android 依賴注入框架 Dagger2" />
+<link rel="canonical" href="https://jaywang.xyz/android/dependency%20injection/2017/04/23/learn-android-dagger2.html" />
+<meta property="og:url" content="https://jaywang.xyz/android/dependency%20injection/2017/04/23/learn-android-dagger2.html" />
+<meta property="og:site_name" content="Jay Wang" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-04-23T09:06:51-05:00" />
+<script type="application/ld+json">
+{"datePublished":"2017-04-23T09:06:51-05:00","url":"https://jaywang.xyz/android/dependency%20injection/2017/04/23/learn-android-dagger2.html","@type":"BlogPosting","headline":"學習 Android 依賴注入框架 Dagger2","dateModified":"2017-04-23T09:06:51-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://jaywang.xyz/android/dependency%20injection/2017/04/23/learn-android-dagger2.html"},"author":{"@type":"Person","name":"Jay Wang"},"description":"學習 Android 依賴注入框架 Dagger2","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://jaywang.xyz/feed.xml" title="Jay Wang" /><!-- the google_analytics_id gets auto inserted from the config file -->
+
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0LDQ23SQFE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-0LDQ23SQFE');
+</script>
+
+
+<link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js" integrity="sha512-Do7uJAaHZm5OLrIv/yN4w0iG1dbu01kzdMNnFfu/mAqgUk6Nniv2JYHcwH+cNwjqgLcqcuBBk+JRvprLVI8azg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha512-0doc9hKxR3PYwso42RD1p5ySZpzzuDiOwMrdCEh2WdJZCjcmFKc/wEnL+z8fBQrnHoiNWbo+3fiGkOYXBdQp4A==" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Jay Wang</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About Me</a><a class="page-link" href="/portfolio/">Portfolio</a><a class="page-link" href="/resume/">Résumé</a><a class="page-link" href="/search/">Search</a><a class="page-link" href="/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">學習 Android 依賴注入框架 Dagger2</h1><p class="page-description">學習 Android 依賴注入框架 Dagger2</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2017-04-23T09:06:51-05:00" itemprop="datePublished">
+        Apr 23, 2017
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      3 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/categories/#Android">Android</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#Dependency Injection">Dependency Injection</a>
+        
+      
+      </p>
+    
+
+    </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#使用-dagger2-流程">使用 Dagger2 流程</a></li>
+<li class="toc-entry toc-h2"><a href="#inject">@Inject</a></li>
+<li class="toc-entry toc-h2"><a href="#module">@Module</a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#provides">@Provides</a></li>
+<li class="toc-entry toc-h3"><a href="#context-">Context ?</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#component">@Component</a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#component-與-inject">Component 與 Inject</a></li>
+<li class="toc-entry toc-h3"><a href="#component-與-module">Component 與 Module</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#結語">結語</a></li>
+<li class="toc-entry toc-h1"><a href="#reference">Reference</a></li>
+</ul><p>從上一篇 <a href="/android/dependency%20injection/2017/04/22/learn-android-dependency-injection.html">學習 Android 依賴注入 Dependency Injection (DI)</a> 我們知道，單純的手動使用 DI 進行編寫，會發生不斷依賴反而讓程式碼變得更複雜的問題。所以這次要來學習前人的智慧 DI 框架的使用，我選擇使用 Dagger2 作為學習的框架。不僅僅因為 Dagger2 的名聲響亮， Dagger2 除了被推崇為最好解決 Android DI 的框架，也適合進行單元測試，更棒的是網路上已經有大量的學習文章了！</p>
+
+<h2 id="使用-dagger2-流程">
+<a class="anchor" href="#%E4%BD%BF%E7%94%A8-dagger2-%E6%B5%81%E7%A8%8B" aria-hidden="true"><span class="octicon octicon-link"></span></a>使用 Dagger2 流程</h2>
+
+<p><img src="/images/markdown/learn-android-dagger2/flow.jpg" width="666"></p>
+
+<h2 id="inject">
+<a class="anchor" href="#inject" aria-hidden="true"><span class="octicon octicon-link"></span></a>@Inject</h2>
+<p>回到上次慘不忍睹的程式碼，不斷的創建造成開發效率變得很低。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivity</span> <span class="kd">extends</span> <span class="nc">AppCompatActivity</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">ModuleA</span> <span class="n">moduleA</span><span class="o">;</span>
+    
+    <span class="nd">@Override</span>
+    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="nc">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+    	<span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+        <span class="n">setContentView</span><span class="o">(</span><span class="no">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">activity_main</span><span class="o">);</span>
+
+        <span class="nc">ModuleD</span> <span class="n">moduleD</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ModuleD</span><span class="o">();</span>
+        <span class="nc">ModuleE</span> <span class="n">moduleE</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ModuleE</span><span class="o">();</span>
+
+        <span class="nc">ModuleC</span> <span class="n">moduleC</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ModuleC</span><span class="o">(</span><span class="n">moduleE</span><span class="o">);</span>
+        <span class="nc">ModuleB</span> <span class="n">moduleB</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ModuleB</span><span class="o">(</span><span class="n">moduleC</span><span class="o">,</span> <span class="n">moduleD</span><span class="o">);</span>
+
+        <span class="n">moduleA</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ModuleA</span><span class="o">(</span><span class="n">moduleB</span><span class="o">);</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>Dagger2 使用註解 (Annotations) 來標註 Client 所依賴的 dependency ，這個註解的名字稱作 @Inject 。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ModuleA</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="nc">ModuleB</span> <span class="n">moduleB</span><span class="o">;</span>
+
+    <span class="nd">@Inject</span>
+    <span class="kd">public</span> <span class="nf">ModuleA</span><span class="o">(</span><span class="nc">ModuleB</span> <span class="n">moduleB</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">moduleB</span> <span class="o">=</span> <span class="n">moduleB</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>同樣的，也用註解 @Inject 來標註 dependency 的 構造函數 (Constructor)
+讓 Client 的 dependency 與 dependency 的 Constructor 產生無形的連結。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ModuleB</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="nc">ModuleC</span> <span class="n">moduleC</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">ModuleD</span> <span class="n">moduleD</span><span class="o">;</span>
+
+    <span class="nd">@Inject</span>
+    <span class="kd">public</span> <span class="nf">ModuleB</span><span class="o">(</span><span class="nc">ModuleC</span> <span class="n">moduleC</span><span class="o">,</span> <span class="nc">ModuleD</span> <span class="n">moduleD</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">moduleC</span> <span class="o">=</span> <span class="n">moduleC</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">moduleD</span> <span class="o">=</span> <span class="n">moduleD</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="module">
+<a class="anchor" href="#module" aria-hidden="true"><span class="octicon octicon-link"></span></a>@Module</h2>
+<p>另一種讓 dependency 之間產生無形連結的方法，就是透過 Module 。
+Module 就像一個工廠一樣，我們統一在 Module 裡生產相關的 dependency。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Module</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ApplicationModule</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="nc">ModuleA</span> <span class="nf">provideModuleA</span><span class="o">(</span><span class="nc">ModuleB</span> <span class="n">moduleB</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">ModuleA</span><span class="o">(</span><span class="n">moduleB</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nc">ModuleB</span> <span class="nf">provideModuleB</span><span class="o">(</span><span class="nc">ModuleC</span> <span class="n">moduleC</span><span class="o">,</span> <span class="nc">ModuleD</span> <span class="n">moduleD</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">ModuleB</span><span class="o">(</span><span class="n">moduleC</span><span class="o">,</span> <span class="n">moduleD</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nc">ModuleC</span> <span class="nf">provideModuleC</span><span class="o">(</span><span class="nc">ModuleE</span> <span class="n">moduleE</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">ModuleC</span><span class="o">(</span><span class="n">moduleE</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nc">ModuleD</span> <span class="nf">provideModuleD</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">ModuleD</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nc">ModuleE</span> <span class="nf">provideModuleE</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">ModuleE</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>Module 就是一個 Class ，不過這個 Class 需要用 @Module 來標註，讓 Dagger2 能夠判斷。
+創建好 Module 後，就可以在 Module 中生產每個 dependency 了。</p>
+
+<h3 id="provides">
+<a class="anchor" href="#provides" aria-hidden="true"><span class="octicon octicon-link"></span></a>@Provides</h3>
+<p>既然 Module 是一個 Class ，那在 Module 中就可以有負責生產 dependency 的 Method ，也可以有負責做其他事情的 Method 。</p>
+
+<p>這種專門為了生產 dependency 的 Method 稱作 Provider ，要利用 @Provides 標註。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Module</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ApplicationModule</span> <span class="o">{</span>
+
+    <span class="nd">@Provides</span>
+    <span class="kd">public</span> <span class="nc">ModuleA</span> <span class="nf">provideModuleA</span><span class="o">(</span><span class="nc">ModuleB</span> <span class="n">moduleB</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">ModuleA</span><span class="o">(</span><span class="n">moduleB</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Provides</span>
+    <span class="kd">public</span> <span class="nc">ModuleB</span> <span class="nf">provideModuleB</span><span class="o">(</span><span class="nc">ModuleC</span> <span class="n">moduleC</span><span class="o">,</span> <span class="nc">ModuleD</span> <span class="n">moduleD</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">ModuleB</span><span class="o">(</span><span class="n">moduleC</span><span class="o">,</span> <span class="n">moduleD</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Provides</span>
+    <span class="kd">public</span> <span class="nc">ModuleC</span> <span class="nf">provideModuleC</span><span class="o">(</span><span class="nc">ModuleE</span> <span class="n">moduleE</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">ModuleC</span><span class="o">(</span><span class="n">moduleE</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Provides</span>
+    <span class="kd">public</span> <span class="nc">ModuleD</span> <span class="nf">provideModuleD</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">ModuleD</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Provides</span>
+    <span class="kd">public</span> <span class="nc">ModuleE</span> <span class="nf">provideModuleE</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">ModuleE</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>@Provides 有一個好處，今天要使用 ModuleA 的時候，系統看到 ModuleA 需要 ModuleB ，就會去找其他 Provider ，看有沒有生產 ModuleB 的 Provider ，然後創建一個 ModuleB 給 ModuleA 使用。
+如果 ModuleB 還需要其他 dependency ，系統就會繼續找下去，直到所有 dependency 都被滿足。</p>
+
+<h3 id="context-">
+<a class="anchor" href="#context-" aria-hidden="true"><span class="octicon octicon-link"></span></a>Context ?</h3>
+<p>那假如今天有一個 Provider 需要 Context 怎麼辦呢，例如 SharedPreferences 。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Module</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ApplicationModule</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kd">final</span> <span class="nc">Context</span> <span class="n">context</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">ApplicationModule</span><span class="o">(</span><span class="nc">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">context</span> <span class="o">=</span> <span class="n">context</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Provides</span>
+    <span class="kd">public</span> <span class="nc">Context</span> <span class="nf">provideContext</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">context</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Provides</span>
+    <span class="kd">public</span> <span class="nc">ModuleD</span> <span class="nf">provideModuleD</span><span class="o">(</span><span class="nc">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">ModuleD</span><span class="o">(</span><span class="n">context</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>之前說過 Module 也是 Class 的一種，那我在產生 Module 時，就可以利用 Module 的 Constructor 引入 Context 囉！</p>
+
+<h2 id="component">
+<a class="anchor" href="#component" aria-hidden="true"><span class="octicon octicon-link"></span></a>@Component</h2>
+<p>知道了 @Module 和 @Inject 的用法，那要怎麼讓那些被 @Inject 與 @Module 的 dependency 產生直接的連結，然後在 Activity 上被更簡單的創建使用？</p>
+
+<p>這就是 Component 大展身手的時候了， Component 扮演了 Injector 的角色，就像注入者一般把那些已經產生無形連結的 dependency 注入 Client 中。</p>
+
+<p>Component 跟 Module 不同了， 不是 Class 而是 Interface 。當然，也要用 @Component 標註一下。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Component</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">ApplicationComponent</span> <span class="o">{</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="component-與-inject">
+<a class="anchor" href="#component-%E8%88%87-inject" aria-hidden="true"><span class="octicon octicon-link"></span></a>Component 與 Inject</h3>
+<p>今天如果 ModuleA、B、C … 都已經做好 Constructor 的 Inject 時，那要怎麼在 MainActivity 實現 ModuleA 呢。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Component</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">ApplicationComponent</span> <span class="o">{</span>
+    <span class="kt">void</span> <span class="nf">inject</span><span class="o">(</span><span class="nc">MainActivity</span> <span class="n">mainActivity</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>首先要在 Component 裡定義一個 inject 的方法，意思就是告訴 Component 到 MainActivity 中，去找所有被 @Inject 的物件。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivity</span> <span class="kd">extends</span> <span class="nc">AppCompatActivity</span> <span class="o">{</span>
+
+    <span class="nd">@Inject</span>
+    <span class="nc">ModuleA</span> <span class="n">moduleA</span><span class="o">;</span> <span class="c1">// Inject 的物件不能設為 private 不然 Component 會找不到</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="nc">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+        <span class="n">setContentView</span><span class="o">(</span><span class="no">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">activity_main</span><span class="o">);</span>
+
+        <span class="nc">ApplicationComponent</span> <span class="n">component</span> <span class="o">=</span> <span class="nc">DaggerApplicationComponent</span><span class="o">.</span><span class="na">builder</span><span class="o">().</span><span class="na">build</span><span class="o">();</span>
+        <span class="n">component</span><span class="o">.</span><span class="na">inject</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>dagger2 會對所有經過 @Component 標註過的 interface 進行處理，自動產生一個實現了這個 interface 的 Class ， Class 的名字就是 Component 的名字前面加上“Dagger”，例如 ApplicationComponent 就會變成 DaggerApplicationComponent 。</p>
+
+<p>找到被 @Inject 註解的 ModuleA 之後，Component 繼續去找 ModuleA 的 dependency 被標註的 Constructor ，對應就是被 @Inject 標註的 ModuleB Constructor ，並創建 ModuleB 返回給 ModuleA 。一樣，如果 ModuleB 也有相對應的 dependency ， Component 也會不斷的找下去。</p>
+
+<h3 id="component-與-module">
+<a class="anchor" href="#component-%E8%88%87-module" aria-hidden="true"><span class="octicon octicon-link"></span></a>Component 與 Module</h3>
+<p>實際操作時，可能會創建多個 Module 負責不同的 dependency ，也有可能有多個 Component 。
+所以要怎麼讓 Component 知道去哪裡找 dependency 呢？
+Dagger2 規定，我們必須要指定 Component 負責的 Module 是誰，就在 @Component 註解的後面定義。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Component</span><span class="o">(</span><span class="n">modules</span> <span class="o">=</span> <span class="o">{</span><span class="nc">ApplicationModule</span><span class="o">.</span><span class="na">class</span><span class="o">})</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">ApplicationComponent</span> <span class="o">{</span>
+    <span class="nc">ModuleA</span> <span class="nf">moduleA</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>如果 MainActivity 需要 ModuleA ，那我們就在 Component 裡定義一個返回 ModuleA 的方法。
+這樣一來， Component 在產生 ModuleA 的時候，就會到 Module 裡面去尋找 ModuleA 相關的 dependency ，一樣創建返回給 ModuleA。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivity</span> <span class="kd">extends</span> <span class="nc">AppCompatActivity</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="nc">ModuleA</span> <span class="n">moduleA</span><span class="o">;</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="nc">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+        <span class="n">setContentView</span><span class="o">(</span><span class="no">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">activity_main</span><span class="o">);</span>
+
+        <span class="nc">ApplicationComponent</span> <span class="n">component</span> <span class="o">=</span> <span class="nc">DaggerApplicationComponent</span><span class="o">.</span><span class="na">builder</span><span class="o">().</span><span class="na">build</span><span class="o">();</span>
+        <span class="n">moduleA</span> <span class="o">=</span> <span class="n">component</span><span class="o">.</span><span class="na">moduleA</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>呼叫 Module 中的 Provider 除了用這種方式，還可以用原本的 Inject 的方式操作。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Component</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">ApplicationComponent</span> <span class="o">{</span>
+    <span class="kt">void</span> <span class="nf">inject</span><span class="o">(</span><span class="nc">MainActivity</span> <span class="n">mainActivity</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>Component 會到 MainActivity 找所有被 @Inject 的物件，然後回到 Module 中使用對應的 Provider ，在返回給物件。</p>
+
+<h1 id="結語">
+<a class="anchor" href="#%E7%B5%90%E8%AA%9E" aria-hidden="true"><span class="octicon octicon-link"></span></a>結語</h1>
+<p>到這邊都只是用了簡單的 Inject、Module、Component 來完成 DI ，還有好多 Dagger2 的功能，像是 Singleton、Scope ，怎麼樣分配 Component 的工作，還沒有提到。希望在大量的練習之後，能夠更深入去分析 Dagger2。</p>
+
+<h1 id="reference">
+<a class="anchor" href="#reference" aria-hidden="true"><span class="octicon octicon-link"></span></a>Reference</h1>
+
+<ul>
+  <li><a href="http://chriszou.com/2016/05/10/android-unit-testing-di-dagger.html">小創作- Android單元測試（六）：使用dagger2來做依賴注入，以及在單元測試中的應用</a></li>
+  <li><a href="http://www.jianshu.com/p/cd2c1c9f68d4">Android：dagger2讓你愛不釋手-基礎依賴注入框架篇</a></li>
+</ul>
+
+  </div><a class="u-url" href="/android/dependency%20injection/2017/04/23/learn-android-dagger2.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+        <ul class="contact-list">
+          <li class="p-name">Jay Wang</li>
+          <li><a class="u-email" href="mailto:windsuzu@gmail.com">windsuzu@gmail.com</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <p>Learning, Blogging, Building</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://www.facebook.com/windsuzu" title="windsuzu"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#facebook"></use></svg></a></li><li><a rel="me" href="https://github.com/windsuzu" title="windsuzu"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://www.linkedin.com/in/windsuzu" title="windsuzu"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

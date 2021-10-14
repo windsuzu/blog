@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>學習 Android Data Binding | Jay Wang</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="學習 Android Data Binding" />
+<meta name="author" content="Jay Wang" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="學習 Android Data Binding" />
+<meta property="og:description" content="學習 Android Data Binding" />
+<link rel="canonical" href="https://jaywang.xyz/android/architecture%20pattern/2017/04/29/learn-android-databinding.html" />
+<meta property="og:url" content="https://jaywang.xyz/android/architecture%20pattern/2017/04/29/learn-android-databinding.html" />
+<meta property="og:site_name" content="Jay Wang" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-04-29T07:56:49-05:00" />
+<script type="application/ld+json">
+{"datePublished":"2017-04-29T07:56:49-05:00","url":"https://jaywang.xyz/android/architecture%20pattern/2017/04/29/learn-android-databinding.html","@type":"BlogPosting","headline":"學習 Android Data Binding","dateModified":"2017-04-29T07:56:49-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://jaywang.xyz/android/architecture%20pattern/2017/04/29/learn-android-databinding.html"},"author":{"@type":"Person","name":"Jay Wang"},"description":"學習 Android Data Binding","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://jaywang.xyz/feed.xml" title="Jay Wang" /><!-- the google_analytics_id gets auto inserted from the config file -->
+
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0LDQ23SQFE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-0LDQ23SQFE');
+</script>
+
+
+<link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js" integrity="sha512-Do7uJAaHZm5OLrIv/yN4w0iG1dbu01kzdMNnFfu/mAqgUk6Nniv2JYHcwH+cNwjqgLcqcuBBk+JRvprLVI8azg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha512-0doc9hKxR3PYwso42RD1p5ySZpzzuDiOwMrdCEh2WdJZCjcmFKc/wEnL+z8fBQrnHoiNWbo+3fiGkOYXBdQp4A==" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Jay Wang</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About Me</a><a class="page-link" href="/portfolio/">Portfolio</a><a class="page-link" href="/resume/">Résumé</a><a class="page-link" href="/search/">Search</a><a class="page-link" href="/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">學習 Android Data Binding</h1><p class="page-description">學習 Android Data Binding</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2017-04-29T07:56:49-05:00" itemprop="datePublished">
+        Apr 29, 2017
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      5 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/categories/#Android">Android</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#Architecture Pattern">Architecture Pattern</a>
+        
+      
+      </p>
+    
+
+    </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h1"><a href="#setup">Setup</a></li>
+<li class="toc-entry toc-h1"><a href="#最簡單的用法">最簡單的用法</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#定義-model">定義 Model</a></li>
+<li class="toc-entry toc-h2"><a href="#定義-layout-檔">定義 layout 檔</a></li>
+<li class="toc-entry toc-h2"><a href="#在-activity-綁定數據">在 Activity 綁定數據</a></li>
+<li class="toc-entry toc-h2"><a href="#表達式">表達式</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#事件處理-event">事件處理 (Event)</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#一般用法">一般用法</a></li>
+<li class="toc-entry toc-h2"><a href="#帶入函數">帶入函數</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#可觀測性-observable">可觀測性 Observable</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#observablefields">ObservableFields</a></li>
+<li class="toc-entry toc-h2"><a href="#observablearraymap">ObservableArrayMap</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#bindingadapter">BindingAdapter</a></li>
+<li class="toc-entry toc-h1"><a href="#recyclerview-運用">RecyclerView 運用</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#定義-observable-物件與-clickhandler">定義 Observable 物件與 ClickHandler</a></li>
+<li class="toc-entry toc-h2"><a href="#定義-item-layout">定義 item layout</a></li>
+<li class="toc-entry toc-h2"><a href="#定義-viewholder">定義 ViewHolder</a></li>
+<li class="toc-entry toc-h2"><a href="#定義-adapter">定義 Adapter</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#結語">結語</a></li>
+<li class="toc-entry toc-h1"><a href="#reference">Reference</a></li>
+</ul><p>為了要在 Android 更方便的運作 NVVM 架構， Google 推出了 Data Binding 並且在 Android Studio 2.0.0 版本能夠正式的使用。</p>
+
+<p>在還沒遇見 Data Binding 之前，例如要架構一個登入的 Activity ，必須要先去編寫 UI 的 XML ，並給每個需要與用戶互動的 View 一個 View ID 。建構好 UI 的部分後， 再去 java 編寫 findViewById() 、 setText() 、 setVisibility() 、 使用 Picasso 之類的第三方操作圖片⋯。</p>
+
+<p>雖然我們可以利用 Butterknife 之類的 Library，降低大量重複煩躁的程式碼，但在更新時還是會同時干涉到 XML 與 java 。有了 Data Binding ，能夠進一步減輕開發的力氣，那就實際操作來學習看看吧。</p>
+
+<h1 id="setup">
+<a class="anchor" href="#setup" aria-hidden="true"><span class="octicon octicon-link"></span></a>Setup</h1>
+
+<p>在 app 的 build.gradle 新增 dataBinding</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>android {
+    ....
+    dataBinding {
+        enabled = true
+    }
+}
+</code></pre></div></div>
+
+<h1 id="最簡單的用法">
+<a class="anchor" href="#%E6%9C%80%E7%B0%A1%E5%96%AE%E7%9A%84%E7%94%A8%E6%B3%95" aria-hidden="true"><span class="octicon octicon-link"></span></a>最簡單的用法</h1>
+
+<h2 id="定義-model">
+<a class="anchor" href="#%E5%AE%9A%E7%BE%A9-model" aria-hidden="true"><span class="octicon octicon-link"></span></a>定義 Model</h2>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">User</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">User</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">name</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="定義-layout-檔">
+<a class="anchor" href="#%E5%AE%9A%E7%BE%A9-layout-%E6%AA%94" aria-hidden="true"><span class="octicon octicon-link"></span></a>定義 layout 檔</h2>
+<p>Data Binding 的 layout 檔與以前的寫法不同了。view 不在需要 ID ，不需要再回到 java 依序配對。這表示在未來新增新的 UI 時，會變得更方便。</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="c">&lt;!-- 重點 1 --&gt;</span>
+<span class="nt">&lt;layout</span> <span class="na">xmlns:android=</span><span class="s">"http://schemas.android.com/apk/res/android"</span>
+    <span class="na">xmlns:tools=</span><span class="s">"http://schemas.android.com/tools"</span><span class="nt">&gt;</span>
+
+    <span class="c">&lt;!-- 重點 2 --&gt;</span>
+    <span class="nt">&lt;data&gt;</span>  
+        <span class="nt">&lt;variable</span>
+            <span class="na">name=</span><span class="s">"user"</span>
+            <span class="na">type=</span><span class="s">"com.sekaij.ddpractice.User"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/data&gt;</span>
+
+ 	......
+    <span class="nt">&lt;RelativeLayout</span>
+            <span class="na">android:layout_width=</span><span class="s">"wrap_content"</span>
+            <span class="na">android:layout_height=</span><span class="s">"wrap_content"</span><span class="nt">&gt;</span>
+
+ 	<span class="nt">&lt;TextView</span>
+                <span class="na">android:layout_width=</span><span class="s">"wrap_content"</span>
+                <span class="na">android:layout_height=</span><span class="s">"wrap_content"</span>
+                <span class="na">android:text=</span><span class="s">"@{user.name}"</span>     
+                <span class="na">tools:text=</span><span class="s">"username"</span> <span class="nt">/&gt;</span>
+                            <span class="c">&lt;!-- 重點 3 --&gt;</span>
+    <span class="nt">&lt;/RelativeLayout&gt;</span>
+<span class="nt">&lt;/layout&gt;</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>重點</th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Data Binding 中的 layout 以 <code class="language-plaintext highlighter-rouge">&lt;layout&gt;</code> 作為最頂端的節點</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>在 <code class="language-plaintext highlighter-rouge">&lt;data&gt;</code> 內定義與這個 layout 有相關互動的物件</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>使用表達式 <code class="language-plaintext highlighter-rouge">@{}</code> 與物件產生連結。我們可以使用 tools 佈置介面</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="在-activity-綁定數據">
+<a class="anchor" href="#%E5%9C%A8-activity-%E7%B6%81%E5%AE%9A%E6%95%B8%E6%93%9A" aria-hidden="true"><span class="octicon octicon-link"></span></a>在 Activity 綁定數據</h2>
+<p>Data Binding 會依照 layout 檔自動產生 Binding 的 Class ，例如 <code class="language-plaintext highlighter-rouge">login_activity.xml</code> ，會產生一個名為 <code class="language-plaintext highlighter-rouge">(LoginActivity)Binding</code> 的 Class。</p>
+
+<p>他代表了所有我們定義的綁定關係，所以必須在 inflate 創建他，後面在 recyclerView 也是如此。</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivity</span> <span class="kd">extends</span> <span class="nc">AppCompatActivity</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="nc">ActivityMainBinding</span> <span class="n">binding</span><span class="o">;</span> <span class="c1">// 自動產生 binding 類別</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="nc">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+        <span class="n">binding</span> <span class="o">=</span> <span class="nc">DataBindingUtil</span><span class="o">.</span><span class="na">setContentView</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="no">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">activity_main</span><span class="o">);</span>
+
+        <span class="nc">User</span> <span class="n">user</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">User</span><span class="o">(</span><span class="s">"Jay"</span><span class="o">);</span>
+        <span class="n">binding</span><span class="o">.</span><span class="na">setUser</span><span class="o">(</span><span class="n">user</span><span class="o">);</span> <span class="c1">// 自動根據 data 中的 variable 產生方法</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="表達式">
+<a class="anchor" href="#%E8%A1%A8%E9%81%94%E5%BC%8F" aria-hidden="true"><span class="octicon octicon-link"></span></a>表達式</h2>
+<p>回到 <code class="language-plaintext highlighter-rouge">@{}</code> 表達式，除了可以利用如 <code class="language-plaintext highlighter-rouge">@{user.name}</code> 來綁定數據外，也可以加入一些簡單的邏輯運算。</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// 基本款
+<span class="nt">&lt;TextView</span> <span class="na">android:text=</span><span class="s">"@{user.name}"</span><span class="nt">/&gt;</span> 
+
+// 可以加入 "三元運算子" 來判斷
+<span class="nt">&lt;TextView</span> <span class="na">android:text=</span><span class="s">"@{user.age &lt; 18 ? @string/redacted : user.name}"</span><span class="nt">/&gt;</span>
+
+// 也可以添加 View 來判斷 VISIBLE
+<span class="nt">&lt;data&gt;</span> <span class="nt">&lt;import</span> <span class="na">type=</span><span class="s">"android.view.View"</span><span class="nt">/&gt;</span> <span class="nt">&lt;/data&gt;</span>
+<span class="nt">&lt;TextView</span> <span class="na">android:visibility=</span><span class="s">"@{user.isAdult ? View.VISIBLE : View.GONE}"</span><span class="nt">/&gt;</span>
+
+// 原本需要判斷是否為 null 的三元運算，也能夠使用合併運算符號 ?? 來判斷了
+contact.lastName != null ? contact.lastName : contact.name
+
+// 如果 lastName 為 null 就用 name ，不為空就使用自己
+contact.lastName ?? contact.name
+</code></pre></div></div>
+
+<p>如果要引入資源時，則利用如 <code class="language-plaintext highlighter-rouge">@{@color/white}</code> 方式來引入。</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">&lt;</span>... android:background="@{user.admin ? @color/colorAccent : @color/white}" /&gt;
+
+<span class="err">&lt;</span>... android:padding="@{isBig ? @dimen/bigPadding : @dimen/smallPadding}" /&gt;
+</code></pre></div></div>
+
+<h1 id="事件處理-event">
+<a class="anchor" href="#%E4%BA%8B%E4%BB%B6%E8%99%95%E7%90%86-event" aria-hidden="true"><span class="octicon octicon-link"></span></a>事件處理 (Event)</h1>
+
+<h2 id="一般用法">
+<a class="anchor" href="#%E4%B8%80%E8%88%AC%E7%94%A8%E6%B3%95" aria-hidden="true"><span class="octicon octicon-link"></span></a>一般用法</h2>
+
+<p>首先先定義 click Event 的類別。</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">EventHandler</span> <span class="o">{</span>
+    <span class="nc">Context</span> <span class="n">context</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">EventHandler</span><span class="o">(</span><span class="nc">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">context</span> <span class="o">=</span> <span class="n">context</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 因為綁定 view ， 所以需要設定參數 view</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onClicked</span><span class="o">(</span><span class="nc">View</span> <span class="n">view</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">Toast</span><span class="o">.</span><span class="na">makeText</span><span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="s">"Success ! "</span><span class="o">,</span> <span class="nc">Toast</span><span class="o">.</span><span class="na">LENGTH_SHORT</span><span class="o">).</span><span class="na">show</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>別忘了 在 binding 中設定 handler:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">EventHandler</span> <span class="n">handler</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">EventHandler</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+<span class="n">binding</span><span class="o">.</span><span class="na">setHandler</span><span class="o">(</span><span class="n">handler</span><span class="o">);</span>
+</code></pre></div></div>
+
+<p>接著在 layout 檔定義 handler 的 variable ，並且代入 onclick</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;variable</span>
+    <span class="na">name=</span><span class="s">"handler"</span>
+    <span class="na">type=</span><span class="s">"com.sekaij.ddpractice.MainActivity.EventHandler"</span><span class="nt">/&gt;</span>
+
+// 記得使用 ::
+// . 已經被棄用
+<span class="nt">&lt;Button</span> <span class="na">android:onClick=</span><span class="s">"@{handler::onClicked}"</span> <span class="nt">/&gt;</span>
+</code></pre></div></div>
+
+<p>也可以使用 java 8 提供的 lambda 表達式</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;Button</span> <span class="na">android:onClick=</span><span class="s">"@{(v) -&gt; handler.onClicked(v)}"</span> <span class="nt">/&gt;</span>
+
+<span class="c">&lt;!-- 可以不帶入 view --&gt;</span>
+<span class="c">&lt;!-- public void onClicked() {...} --&gt;</span>
+<span class="nt">&lt;Button</span> <span class="na">android:onClick=</span><span class="s">"@{() -&gt; handler.onClicked()}"</span> <span class="nt">/&gt;</span>
+</code></pre></div></div>
+
+<h2 id="帶入函數">
+<a class="anchor" href="#%E5%B8%B6%E5%85%A5%E5%87%BD%E6%95%B8" aria-hidden="true"><span class="octicon octicon-link"></span></a>帶入函數</h2>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">User</span> <span class="n">user</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">User</span><span class="o">(</span><span class="s">"Jay"</span><span class="o">);</span>
+<span class="n">binding</span><span class="o">.</span><span class="na">setUser</span><span class="o">(</span><span class="n">user</span><span class="o">);</span>
+
+<span class="nc">EventHandler</span> <span class="n">handler</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">EventHandler</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+<span class="n">binding</span><span class="o">.</span><span class="na">setHandler</span><span class="o">(</span><span class="n">handler</span><span class="o">);</span>
+
+    <span class="o">...</span>
+
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">onButtonClicked</span><span class="o">(</span><span class="nc">User</span> <span class="n">user</span><span class="o">)</span> <span class="o">{</span>
+    <span class="nc">Toast</span><span class="o">.</span><span class="na">makeText</span><span class="o">(</span><span class="n">view</span><span class="o">.</span><span class="na">getContext</span><span class="o">(),</span> <span class="s">"Success ! "</span> <span class="o">+</span> <span class="n">user</span><span class="o">.</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">" 様"</span><span class="o">,</span> <span class="nc">Toast</span><span class="o">.</span><span class="na">LENGTH_SHORT</span><span class="o">).</span><span class="na">show</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;Button</span> <span class="na">android:onClick=</span><span class="s">"@{() -&gt; handler.onButtonClicked(user)}"</span> <span class="nt">/&gt;</span>
+
+</code></pre></div></div>
+
+<h1 id="可觀測性-observable">
+<a class="anchor" href="#%E5%8F%AF%E8%A7%80%E6%B8%AC%E6%80%A7-observable" aria-hidden="true"><span class="octicon octicon-link"></span></a>可觀測性 Observable</h1>
+<p>Data Binding 還能夠在數據更新時，通知 UI 變動， 只需將要更新變動的 object 繼承 BaseObservable 類別</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">User</span> <span class="kd">extends</span> <span class="nc">BaseObservable</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">User</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Bindable</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">name</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setName</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+        <span class="n">notifyPropertyChanged</span><span class="o">(</span><span class="no">BR</span><span class="o">.</span><span class="na">name</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>BR 是編譯後產生的一個類別，會去尋找被標註 @Bindable 的 getter 方法，在 BR 中產生對應的值。
+當數據更新後， <code class="language-plaintext highlighter-rouge">notifyPropertyChanged</code> 會通知系統 <code class="language-plaintext highlighter-rouge">BR.name</code> 已經變動，需要更新 UI 。</p>
+
+<h2 id="observablefields">
+<a class="anchor" href="#observablefields" aria-hidden="true"><span class="octicon octicon-link"></span></a>ObservableFields</h2>
+<p>如果覺得要設定 getter 與 setter 很麻煩，可以設定 ObservableField 以及衍生的 ObservableBoolean 、 ObservableInt ⋯ 等。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ObservableUser</span> <span class="o">{</span>
+
+    <span class="c1">// 一定要加 public final</span>
+    <span class="kd">public</span> <span class="kd">final</span> <span class="nc">ObservableField</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">name</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ObservableField</span><span class="o">&lt;&gt;();</span>
+    <span class="kd">public</span> <span class="kd">final</span> <span class="nc">ObservableBoolean</span> <span class="n">isAdmin</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ObservableBoolean</span><span class="o">();</span>
+
+    <span class="kd">public</span> <span class="nf">ObservableUser</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">isAdmin</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">name</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">isAdmin</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">isAdmin</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// 定義</span>
+<span class="nc">ObservableUser</span> <span class="n">observableUser</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ObservableUser</span><span class="o">(</span><span class="s">"Jay"</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+
+<span class="c1">// 取得值</span>
+<span class="nc">String</span> <span class="n">name</span> <span class="o">=</span> <span class="n">observableUser</span><span class="o">.</span><span class="na">name</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
+
+<span class="c1">// 設定值</span>
+<span class="n">observableUser</span><span class="o">.</span><span class="na">name</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"Wei"</span><span class="o">);</span>
+</code></pre></div></div>
+
+<h2 id="observablearraymap">
+<a class="anchor" href="#observablearraymap" aria-hidden="true"><span class="octicon octicon-link"></span></a>ObservableArrayMap</h2>
+<p>我們還可以使用 key-value 來存取數據，Data Binding 提供了 ObservableArrayMap 類別。</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">ObservableArrayMap</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">String</span><span class="o">&gt;</span> <span class="n">item</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ObservableArrayMap</span><span class="o">&lt;&gt;();</span>
+
+<span class="n">item</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"age"</span><span class="o">,</span> <span class="s">"20"</span><span class="o">);</span>
+<span class="n">binding</span><span class="o">.</span><span class="na">setItem</span><span class="o">(</span><span class="n">item</span><span class="o">);</span>
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;data&gt;</span>
+<span class="nt">&lt;variable</span>
+    <span class="na">name=</span><span class="s">"item"</span>
+    <span class="na">type=</span><span class="s">"android.databinding.ObservableArrayMap&amp;lt;String,String&amp;gt;"</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/data&gt;</span>
+<span class="c">&lt;!-- &amp;lt; 與 &amp;gt; 代替 &lt; &gt; --&gt;</span>
+<span class="c">&lt;!-- 雖然會顯示錯誤 但編譯正常 --&gt;</span>
+
+<span class="nt">&lt;TextView</span> <span class="na">android:text=</span><span class="s">'@{item["age"]}'</span> <span class="nt">/&gt;</span>
+<span class="c">&lt;!-- 使用 [] 讀取數據 --&gt;</span>
+</code></pre></div></div>
+
+<h1 id="bindingadapter">
+<a class="anchor" href="#bindingadapter" aria-hidden="true"><span class="octicon octicon-link"></span></a>BindingAdapter</h1>
+<p>除了基本的設定 setText 以外，當我們要設定圖片時怎麼辦，如果不是從 drawable 讀檔而是從 url ， 如果還想要使用 Picasso ， Glide 等第三方加載圖片時呢？ 這可以用 <code class="language-plaintext highlighter-rouge">BindingAdapter</code> 來解決！</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CustomDataBindingAdapter</span> <span class="o">{</span>
+
+    <span class="nd">@BindingAdapter</span><span class="o">(</span><span class="s">"picasso"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">setImageUrl</span><span class="o">(</span><span class="nc">ImageView</span> <span class="n">view</span><span class="o">,</span> <span class="nc">String</span> <span class="n">url</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">Picasso</span><span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="n">view</span><span class="o">.</span><span class="na">getContext</span><span class="o">()).</span><span class="na">load</span><span class="o">(</span><span class="n">url</span><span class="o">).</span><span class="na">into</span><span class="o">(</span><span class="n">view</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nt">&lt;ImageView</span> <span class="na">app:picasso=</span><span class="s">"@{user.imgURL}"</span> <span class="nt">/&gt;</span>
+</code></pre></div></div>
+
+<p>如此一來，我們就可以自己定義自己想要的 setter 了！</p>
+
+<p>在 @BindingAdapter 註解的後面，也可以放入多個參數如 ：</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@BindingAdapter</span><span class="o">({</span><span class="s">"imageUrl"</span><span class="o">,</span> <span class="s">"error"</span><span class="o">})</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">loadImage</span><span class="o">(</span><span class="nc">ImageView</span> <span class="n">view</span><span class="o">,</span> <span class="nc">String</span> <span class="n">url</span><span class="o">,</span> <span class="nc">Drawable</span> <span class="n">error</span><span class="o">)</span> <span class="o">{</span>
+    <span class="nc">Glide</span><span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="n">view</span><span class="o">.</span><span class="na">getContext</span><span class="o">()).</span><span class="na">load</span><span class="o">(</span><span class="n">url</span><span class="o">).</span><span class="na">error</span><span class="o">(</span><span class="n">error</span><span class="o">).</span><span class="na">into</span><span class="o">(</span><span class="n">view</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;ImageView</span> 
+    <span class="na">app:imageUrl=</span><span class="s">"@{url}"</span>
+    <span class="na">app:error=</span><span class="s">"@{@drawable/ic_launcher}"</span><span class="nt">/&gt;</span>
+</code></pre></div></div>
+
+<h1 id="recyclerview-運用">
+<a class="anchor" href="#recyclerview-%E9%81%8B%E7%94%A8" aria-hidden="true"><span class="octicon octicon-link"></span></a>RecyclerView 運用</h1>
+
+<p>Data Binding 節省了 ViewHolder 的程式碼，不需要再定義 findViewById ，不需要 holder.location = … ，只需要使用 binding 類別給予的 inflate 進行綁定。</p>
+
+<h2 id="定義-observable-物件與-clickhandler">
+<a class="anchor" href="#%E5%AE%9A%E7%BE%A9-observable-%E7%89%A9%E4%BB%B6%E8%88%87-clickhandler" aria-hidden="true"><span class="octicon octicon-link"></span></a>定義 Observable 物件與 ClickHandler</h2>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">TimeZone</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">final</span> <span class="nc">ObservableField</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">location</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ObservableField</span><span class="o">&lt;&gt;();</span>
+    <span class="kd">public</span> <span class="kd">final</span> <span class="nc">ObservableField</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">time</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ObservableField</span><span class="o">&lt;&gt;();</span>
+
+    <span class="kd">public</span> <span class="nf">TimeZone</span><span class="o">(</span><span class="nc">String</span> <span class="n">loc</span><span class="o">,</span> <span class="nc">String</span> <span class="n">time</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">location</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">loc</span><span class="o">);</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">time</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">time</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">TimeZoneClickHandler</span> <span class="o">{</span>
+    <span class="kt">void</span> <span class="nf">onTimeZoneClick</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="定義-item-layout">
+<a class="anchor" href="#%E5%AE%9A%E7%BE%A9-item-layout" aria-hidden="true"><span class="octicon octicon-link"></span></a>定義 item layout</h2>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="nt">&lt;layout</span> <span class="na">xmlns:android=</span><span class="s">"http://schemas.android.com/apk/res/android"</span>
+    <span class="na">xmlns:tools=</span><span class="s">"http://schemas.android.com/tools"</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;data&gt;</span>
+        <span class="nt">&lt;variable</span>
+            <span class="na">name=</span><span class="s">"timeZone"</span>
+            <span class="na">type=</span><span class="s">"com.sekaij.ddpractice.TimeZone"</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;variable</span>
+            <span class="na">name=</span><span class="s">"handler"</span>
+            <span class="na">type=</span><span class="s">"com.sekaij.ddpractice.TimeZoneClickHandler"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/data&gt;</span>
+
+    <span class="nt">&lt;LinearLayout</span>
+        <span class="na">android:layout_margin=</span><span class="s">"16dp"</span>
+        <span class="na">android:layout_width=</span><span class="s">"match_parent"</span>
+        <span class="na">android:layout_height=</span><span class="s">"wrap_content"</span>
+        <span class="na">android:onClick=</span><span class="s">"@{() -&gt; handler.onTimeZoneClick()}"</span><span class="nt">&gt;</span>
+
+        <span class="nt">&lt;TextView</span>
+            <span class="na">android:layout_width=</span><span class="s">"0dp"</span>
+            <span class="na">android:layout_height=</span><span class="s">"wrap_content"</span>
+            <span class="na">android:layout_weight=</span><span class="s">"1"</span>
+            <span class="na">android:textColor=</span><span class="s">"@android:color/darker_gray"</span>
+            <span class="na">android:text=</span><span class="s">"@{timeZone.location}"</span>
+            <span class="na">tools:text=</span><span class="s">"location"</span> <span class="nt">/&gt;</span>
+
+
+        <span class="nt">&lt;TextView</span>
+            <span class="na">android:layout_width=</span><span class="s">"0dp"</span>
+            <span class="na">android:layout_height=</span><span class="s">"wrap_content"</span>
+            <span class="na">android:layout_weight=</span><span class="s">"1"</span>
+            <span class="na">android:text=</span><span class="s">"@{timeZone.time}"</span>
+            <span class="na">tools:text=</span><span class="s">"time"</span> <span class="nt">/&gt;</span>
+
+    <span class="nt">&lt;/LinearLayout&gt;</span>
+<span class="nt">&lt;/layout&gt;</span>
+</code></pre></div></div>
+
+<h2 id="定義-viewholder">
+<a class="anchor" href="#%E5%AE%9A%E7%BE%A9-viewholder" aria-hidden="true"><span class="octicon octicon-link"></span></a>定義 ViewHolder</h2>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">TimeZoneViewHolder</span> <span class="kd">extends</span> <span class="nc">RecyclerView</span><span class="o">.</span><span class="na">ViewHolder</span> <span class="o">{</span>
+
+        <span class="kd">private</span> <span class="nc">RecyclerViewItemBinding</span> <span class="n">binding</span><span class="o">;</span>
+
+        <span class="kd">public</span> <span class="nf">TimeZoneViewHolder</span><span class="o">(</span><span class="nc">RecyclerViewItemBinding</span> <span class="n">binding</span><span class="o">)</span> <span class="o">{</span>
+            <span class="kd">super</span><span class="o">(</span><span class="n">binding</span><span class="o">.</span><span class="na">getRoot</span><span class="o">());</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">binding</span> <span class="o">=</span> <span class="n">binding</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">bindTo</span><span class="o">(</span><span class="nc">TimeZone</span> <span class="n">timeZone</span><span class="o">)</span> <span class="o">{</span>
+        	<span class="n">binding</span><span class="o">.</span><span class="na">setTimeZone</span><span class="o">(</span><span class="n">timeZone</span><span class="o">);</span>
+
+            <span class="c1">// binding.setVariable(BR.timeZone, timeZone); </span>
+            <span class="c1">// 如果在 xml 定義的 variable 是與他人共用相同的 data ，需要使用這個方法</span>
+
+            <span class="n">binding</span><span class="o">.</span><span class="na">executePendingBindings</span><span class="o">();</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setHandler</span><span class="o">(</span><span class="kd">final</span> <span class="nc">Context</span> <span class="n">context</span><span class="o">,</span> <span class="kd">final</span> <span class="nc">TimeZone</span> <span class="n">timeZone</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">binding</span><span class="o">.</span><span class="na">setHandler</span><span class="o">(</span><span class="k">new</span> <span class="nc">TimeZoneClickHandler</span><span class="o">()</span> <span class="o">{</span>
+                <span class="nd">@Override</span>
+                <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onTimeZoneClick</span><span class="o">()</span> <span class="o">{</span>
+                    <span class="nc">String</span> <span class="n">location</span> <span class="o">=</span> <span class="n">timeZone</span><span class="o">.</span><span class="na">location</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
+                    <span class="nc">String</span> <span class="n">time</span> <span class="o">=</span> <span class="n">timeZone</span><span class="o">.</span><span class="na">time</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
+                    <span class="nc">Toast</span><span class="o">.</span><span class="na">makeText</span><span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">location</span> <span class="o">+</span> <span class="s">" : "</span> <span class="o">+</span> <span class="n">time</span><span class="o">,</span> <span class="nc">Toast</span><span class="o">.</span><span class="na">LENGTH_SHORT</span><span class="o">).</span><span class="na">show</span><span class="o">();</span>
+                <span class="o">}</span>
+            <span class="o">});</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+</code></pre></div></div>
+
+<p>這邊需要注意的是 <code class="language-plaintext highlighter-rouge">executePendingBindings</code> 這個方法，當我們設定數據時，數據綁定要等到下一個動畫幀才會觸發，所以我們才需要這個方法，強制執行更新 UI。</p>
+
+<h2 id="定義-adapter">
+<a class="anchor" href="#%E5%AE%9A%E7%BE%A9-adapter" aria-hidden="true"><span class="octicon octicon-link"></span></a>定義 Adapter</h2>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">TimeZoneRecyclerAdapter</span> <span class="kd">extends</span> <span class="nc">RecyclerView</span><span class="o">.</span><span class="na">Adapter</span><span class="o">&lt;</span><span class="nc">TimeZoneRecyclerAdapter</span><span class="o">.</span><span class="na">TimeZoneViewHolder</span><span class="o">&gt;</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">TimeZone</span><span class="o">&gt;</span> <span class="n">timeZoneList</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;();</span>
+    <span class="kd">private</span> <span class="nc">Context</span> <span class="n">context</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">TimeZoneRecyclerAdapter</span><span class="o">(</span><span class="nc">Context</span> <span class="n">context</span><span class="o">,</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">TimeZone</span><span class="o">&gt;</span> <span class="n">timeZoneList</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">context</span> <span class="o">=</span> <span class="n">context</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">timeZoneList</span> <span class="o">=</span> <span class="n">timeZoneList</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">TimeZoneViewHolder</span> <span class="nf">onCreateViewHolder</span><span class="o">(</span><span class="nc">ViewGroup</span> <span class="n">parent</span><span class="o">,</span> <span class="kt">int</span> <span class="n">viewType</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">LayoutInflater</span> <span class="n">layoutInflater</span> <span class="o">=</span> <span class="nc">LayoutInflater</span><span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="n">parent</span><span class="o">.</span><span class="na">getContext</span><span class="o">());</span>
+        <span class="nc">RecyclerViewItemBinding</span> <span class="n">binding</span> <span class="o">=</span> <span class="nc">RecyclerViewItemBinding</span><span class="o">.</span><span class="na">inflate</span><span class="o">(</span><span class="n">layoutInflater</span><span class="o">,</span> <span class="n">parent</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">TimeZoneViewHolder</span><span class="o">(</span><span class="n">binding</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onBindViewHolder</span><span class="o">(</span><span class="nc">TimeZoneViewHolder</span> <span class="n">holder</span><span class="o">,</span> <span class="kt">int</span> <span class="n">position</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">holder</span><span class="o">.</span><span class="na">bindTo</span><span class="o">(</span><span class="n">timeZoneList</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">position</span><span class="o">));</span>
+        <span class="n">holder</span><span class="o">.</span><span class="na">setHandler</span><span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">timeZoneList</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">position</span><span class="o">));</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getItemCount</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">timeZoneList</span><span class="o">.</span><span class="na">size</span><span class="o">();</span>
+    <span class="o">}</span>
+</code></pre></div></div>
+
+<h1 id="結語">
+<a class="anchor" href="#%E7%B5%90%E8%AA%9E" aria-hidden="true"><span class="octicon octicon-link"></span></a>結語</h1>
+
+<p>Data Binding 讓我們能夠在 xml 定義一些表達式，讓 UI 跟 Activity 降低更多耦合，但也不代表我們能把全部的邏輯都放到 xml ， 然後不用再寫 java 。</p>
+
+<p>例如我們不應該在 xml 使用一個發送網路訊息的功能。</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;ImageView</span> <span class="na">android:click=</span><span class="s">"@{webservice.sendMoneyAsync}"</span><span class="nt">/&gt;</span>
+</code></pre></div></div>
+
+<p>我們應該只處理一些關於 UI 介面的事情。</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;ImageView</span> <span class="na">android:click=</span><span class="s">"@{presenter.onSendClick}"</span><span class="nt">/&gt;</span>
+</code></pre></div></div>
+
+<p>到此，還有很多 Data Binding 與 DI 的運用，以及將 Data Binding 帶進更棒的 NVVM 架構！</p>
+
+<h1 id="reference">
+<a class="anchor" href="#reference" aria-hidden="true"><span class="octicon octicon-link"></span></a>Reference</h1>
+
+<ul>
+  <li><a href="https://news.realm.io/cn/news/data-binding-android-boyar-mount/">棉花糖給Android 帶來的Data Bindings</a></li>
+  <li><a href="https://goo.gl/iJhLb1">Android Data Binding 系列(一) – 详细介绍与使用</a></li>
+</ul>
+
+<p>第一個網站為 Android Data Binding 發表的詳細講解，有詳細的講述 Data Binding 背後的運行，所以在這篇文章就不詳細探討，而是實作 Data Binding 的技術。</p>
+
+
+  </div><a class="u-url" href="/android/architecture%20pattern/2017/04/29/learn-android-databinding.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+        <ul class="contact-list">
+          <li class="p-name">Jay Wang</li>
+          <li><a class="u-email" href="mailto:windsuzu@gmail.com">windsuzu@gmail.com</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <p>Learning, Blogging, Building</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://www.facebook.com/windsuzu" title="windsuzu"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#facebook"></use></svg></a></li><li><a rel="me" href="https://github.com/windsuzu" title="windsuzu"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://www.linkedin.com/in/windsuzu" title="windsuzu"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
