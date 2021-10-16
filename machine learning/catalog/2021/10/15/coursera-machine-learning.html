@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>📌 機器學習的學術理論目錄 - Machine Learning Theory Catalog | Jay Wang</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="📌 機器學習的學術理論目錄 - Machine Learning Theory Catalog" />
+<meta name="author" content="Jay Wang" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Introduction" />
+<meta property="og:description" content="Introduction" />
+<link rel="canonical" href="https://jaywang.xyz/machine%20learning/catalog/2021/10/15/coursera-machine-learning.html" />
+<meta property="og:url" content="https://jaywang.xyz/machine%20learning/catalog/2021/10/15/coursera-machine-learning.html" />
+<meta property="og:site_name" content="Jay Wang" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-10-15T00:00:00-05:00" />
+<script type="application/ld+json">
+{"datePublished":"2021-10-15T00:00:00-05:00","url":"https://jaywang.xyz/machine%20learning/catalog/2021/10/15/coursera-machine-learning.html","@type":"BlogPosting","headline":"📌 機器學習的學術理論目錄 - Machine Learning Theory Catalog","dateModified":"2021-10-15T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://jaywang.xyz/machine%20learning/catalog/2021/10/15/coursera-machine-learning.html"},"author":{"@type":"Person","name":"Jay Wang"},"description":"Introduction","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://jaywang.xyz/feed.xml" title="Jay Wang" /><!-- the google_analytics_id gets auto inserted from the config file -->
+
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0LDQ23SQFE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-0LDQ23SQFE');
+</script>
+
+
+<link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js" integrity="sha512-Do7uJAaHZm5OLrIv/yN4w0iG1dbu01kzdMNnFfu/mAqgUk6Nniv2JYHcwH+cNwjqgLcqcuBBk+JRvprLVI8azg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha512-0doc9hKxR3PYwso42RD1p5ySZpzzuDiOwMrdCEh2WdJZCjcmFKc/wEnL+z8fBQrnHoiNWbo+3fiGkOYXBdQp4A==" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Jay Wang</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About Me</a><a class="page-link" href="/portfolio/">Portfolio</a><a class="page-link" href="/resume/">Résumé</a><a class="page-link" href="/search/">Search</a><a class="page-link" href="/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">📌 機器學習的學術理論目錄 - Machine Learning Theory Catalog</h1><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-10-15T00:00:00-05:00" itemprop="datePublished">
+        Oct 15, 2021
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      1 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/categories/#Machine Learning">Machine Learning</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#Catalog">Catalog</a>
+        
+      
+      </p>
+    
+
+    </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h1 id="introduction">Introduction</h1>
+
+<p>吳恩達教授的機器學習 <sup id="fnref-1" class="footnote-ref"><a href="#fn-1">1</a></sup> 是我最推薦的基礎課程之一，他用淺顯易懂的數學就能介紹所有機器學習理論的基礎。我在吸收完他的教學後，也寫了一些教學筆記，並且將所有筆記統整在這裡，方便大家能夠一起學習。</p>
+
+<div class="Toast Toast--warning googoo">
+   <span class="Toast-icon"><svg class="octicon octicon-alert octicon octicon-alert octicon octicon-alert" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8.22 1.754a.25.25 0 00-.44 0L1.698 13.132a.25.25 0 00.22.368h12.164a.25.25 0 00.22-.368L8.22 1.754zm-1.763-.707c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0114.082 15H1.918a1.75 1.75 0 01-1.543-2.575L6.457 1.047zM9 11a1 1 0 11-2 0 1 1 0 012 0zm-.25-5.25a.75.75 0 00-1.5 0v2.5a.75.75 0 001.5 0v-2.5z"></path></svg></span>
+   <span class="Toast-content">這是新的部落格，目前還在搬運筆記中</span>
+</div>
+
+<h1 id="catalog">Catalog</h1>
+
+<ul>
+  <li><a href="">機器學習基礎理論 - 什麼是機器學習</a></li>
+  <li><a href="">機器學習基礎理論 - 什麼是模型 (Model)</a></li>
+  <li><a href="">機器學習基礎理論 - 代價函數 (Cost Function) / 損失函數 (Loss Function)</a></li>
+  <li><a href="">機器學習基礎理論 - 梯度下降 (Gradient Descent)</a></li>
+  <li><a href="">機器學習基礎理論 - 線性回歸 (Linear Regression)</a></li>
+  <li><a href="">機器學習基礎理論 - 線性分類 (Linear Classification)</a></li>
+  <li><a href="">機器學習基礎理論 - 邏輯斯迴歸 (Logistic Regression)</a></li>
+  <li><a href="">機器學習基礎理論 - 過度擬合 (Overfitting)</a></li>
+  <li><a href="">機器學習基礎理論 - 怎麼解決過度擬合 (How to Solve Overfitting)</a></li>
+  <li><a href="">機器學習基礎理論 - 偏差還是變異 (Bias or Variance)</a></li>
+  <li><a href="">機器學習基礎理論 - 解決偏差跟變異 (Solving Bias/Variance)</a></li>
+  <li><a href="">機器學習基礎理論 - 什麼是神經網路 (Neural Network)</a></li>
+  <li><a href="">機器學習基礎理論 - 神經網路要怎麼訓練 (Neural Network Training)</a></li>
+  <li><a href="">機器學習基礎理論 - 什麼是支援向量機 (SVM, Support Vector Machine)</a></li>
+</ul>
+
+<h1 id="credit">Credit</h1>
+
+<ul>
+  <li>Teached by <a href="https://www.coursera.org/instructor/andrewng">Andrew Ng</a>, CEO/Founder Landing AI; Co-founder, Coursera; Adjunct Professor, Stanford University; formerly Chief Scientist,Baidu and founding lead of Google Brain</li>
+  <li>Created by <a href="https://www.coursera.org/learn/machine-learning">Stanford University</a></li>
+</ul>
+
+<div class="footnotes"><p id="fn-1">1. https://zh-tw.coursera.org/learn/machine-learning<a href="#fnref-1" class="footnote footnotes">↩</a></p></div>
+
+  </div><a class="u-url" href="/machine%20learning/catalog/2021/10/15/coursera-machine-learning.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+        <ul class="contact-list">
+          <li class="p-name">Jay Wang</li>
+          <li><a class="u-email" href="mailto:windsuzu@gmail.com">windsuzu@gmail.com</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <p>Learning, Blogging, Building</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://www.facebook.com/windsuzu" title="windsuzu"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#facebook"></use></svg></a></li><li><a rel="me" href="https://github.com/windsuzu" title="windsuzu"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://www.linkedin.com/in/windsuzu" title="windsuzu"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
