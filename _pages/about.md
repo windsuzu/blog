@@ -12,7 +12,7 @@ permalink: /about/
 <div id="bg">
     <div id="profile">
         <div id="avatar-b">
-            <img id="avatar" src="../images/avatar.jpg" alt="Avatar" height=240 width="200">
+            <img id="avatar" src="../images/avatar.png" alt="Avatar" height=240 width="200">
         </div>
         <img id="sign" src="../images/sign.png" alt="Signature" height="120">
     </div>

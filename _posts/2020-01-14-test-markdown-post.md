@@ -7,6 +7,7 @@ title: An Example Markdown Post
 search_exclude: true
 hide: true
 ---
+
 # Example Markdown Post
 
 ## Basic setup
