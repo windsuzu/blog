@@ -12,11 +12,11 @@ permalink: /about/
 <div id="bg">
     <div id="profile">
         <div id="avatar-b">
-            <img id="avatar" src="../images/avatar.png" alt="Avatar" height=240 width="200">
+            <img id="avatar" src="../images/avatar.png" alt="Avatar" height="240" width="200">
         </div>
         <img id="sign" src="../images/sign.png" alt="Signature" height="120">
     </div>
-    <div id="intro" style="margin: 6px 18px 12px 6px; padding: 0; font-size:16px">
+    <div id="intro">
         <span>
             Hello, I am Jay, and I was born in 1996. I graduated from National Cheng Kung University with a Master's degree in Artificial Intelligence in July 2021. My master's thesis is related to deep learning and natural language processing.
         </span>
@@ -36,9 +36,13 @@ permalink: /about/
 </div>
 
 <div class="divider"><span class="section">Future</span></div>
-<span style="margin: 12px 24px 6px 24px;">My dream is to work overseas as an artificial intelligence developer. At the same time, I really admired Shohei Ohtani, so I learned from him and built my future goals by using the Mandala Chart.</span>
 
-<br>
+<div id="intro">
+    <span>
+        My dream is to work overseas as an artificial intelligence developer. At the same time, I really admired Shohei Ohtani, so I learned from him and built my future goals by using the Mandala Chart.
+    </span>
+</div>
+
 <div>
     <img src="../images/ohtani.png" alt="Ohtani" style="display:block; margin: auto;">
 </div>
