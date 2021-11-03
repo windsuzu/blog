@@ -35,7 +35,7 @@ permalink: /about/
     </div>
 </div>
 
-<div class="divider"><span class="section">Future</span></div>
+<!-- <div class="divider"><span class="section">Future</span></div>
 
 <div id="intro">
     <span>
@@ -45,7 +45,7 @@ permalink: /about/
 
 <div>
     <img src="../images/ohtani.png" alt="Ohtani" style="display:block; margin: auto;">
-</div>
+</div> -->
 
 <!-- This website is powered by **[fastpages](https://github.com/fastai/fastpages)** [^1]. -->
 <!-- [^1]:a blogging platform that natively supports Jupyter notebooks in addition to other formats. -->
