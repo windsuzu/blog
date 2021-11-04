@@ -101,5 +101,4 @@ key: value
 ## Footnotes
 
 Hello World {% fn 1 %}.
-
 {{ 'This is the footnote.' | fndetail: 1 }}

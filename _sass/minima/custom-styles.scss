@@ -2,18 +2,35 @@
 /*--- IMPORT STYLES FOR FASTPAGES ---*/
 @import "minima/fastpages-styles";   
 
-
-
 /*-----------------------------------*/
 /*----- ADD YOUR STYLES BELOW -------*/
 
 // If you want to turn off dark background for syntax highlighting, comment or delete the below line.
 // @import "minima/fastpages-dracula-highlight"; 
 
-@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400&display=swap');
 
-$font-main: 'Roboto', sans-serif;
 * {
-   font-family: $font-main;
-   font-weight: 500;
+   font-family: 'Noto Sans TC', sans-serif;
+}
+
+.post-content p {
+   font-size: 1.2em;
+}
+
+.post-content li {
+   font-size: 1em;
+}
+
+.page-content h1 {
+   font-size: 2em;
+}
+.page-content h2 {
+   font-size: 1.75em;
+}
+.page-content h3 {
+   font-size: 1.5em;
+}
+.page-content h4 {
+   font-size: 1.2em;
 }
