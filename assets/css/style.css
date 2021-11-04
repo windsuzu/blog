@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css?family=Roboto");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400&display=swap");
 .highlight .c { color: #998; font-style: italic; }
 
 .highlight .err { color: #a61717; background-color: #e3d2d2; }
@@ -430,6 +430,18 @@ pre code { font-size: 15px !important; }
 
 /*-----------------------------------*/
 /*----- ADD YOUR STYLES BELOW -------*/
-* { font-family: "Roboto", sans-serif; font-weight: 500; }
+* { font-family: 'Noto Sans TC', sans-serif; }
+
+.post-content p { font-size: 1.2em; }
+
+.post-content li { font-size: 1em; }
+
+.page-content h1 { font-size: 2em; }
+
+.page-content h2 { font-size: 1.75em; }
+
+.page-content h3 { font-size: 1.5em; }
+
+.page-content h4 { font-size: 1.2em; }
 
 /*# sourceMappingURL=style.css.map */
