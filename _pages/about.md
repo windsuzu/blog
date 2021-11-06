@@ -35,16 +35,16 @@ permalink: /about/
     </div>
 </div>
 
-<!-- <div class="divider"><span class="section">Future</span></div>
+ <div class="divider"><span class="section">Future</span></div>
 
 <div id="intro">
     <span>
-        My dream is to work overseas as an artificial intelligence developer. At the same time, I really admired Shohei Ohtani, so I learned from him and built my future goals by using the Mandala Chart.
+        My dream is to become a good machine learning engineer, proficient in mathematics, statistics and many other knowledge. At the same time, I really admired Shohei Ohtani, so I learned from him and built my future goals by using the Mandala Chart.
     </span>
 </div>
 
 <div>
-    <img src="../images/ohtani.png" alt="Ohtani" style="display:block; margin: auto;">
+    <img src="../images/ohtani.jpg" alt="Ohtani" style="display:block; margin: auto;">
 </div> -->
 
 <!-- This website is powered by **[fastpages](https://github.com/fastai/fastpages)** [^1]. -->
